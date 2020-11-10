@@ -1,4 +1,4 @@
-import { SETH, SETLS, SETA } from "./types";
+import { SETH, SETLS, SETA, SETDEG } from "./types";
 
 export const setH = (deg) => {
   return {
@@ -21,5 +21,12 @@ export const setA = (a) => {
   return {
     type: SETA,
     payload: a,
+  };
+};
+
+export const setDeg = (deg) => {
+  return {
+    type: SETDEG,
+    payload: deg,
   };
 };

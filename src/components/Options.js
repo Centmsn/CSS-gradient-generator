@@ -89,7 +89,7 @@ const Options = ({ setH, setLs, hue }) => {
 
 const Settings = styled.div`
   z-index: 999;
-  margin-top: 15vh;
+  margin-top: 20vh;
   flex-basis: 75%;
   height: 60%;
 

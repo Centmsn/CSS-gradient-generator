@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
 
-const Output = ({ hue, sat, light, alpha }) => {
+const Output = ({ hue, sat, light, alpha, deg }) => {
   return (
     <CodeOutput>
       <span>
-        background: linear-gradient(90deg, hsla({hue}, {sat}%, {light}%, {alpha}
+        background: linear-gradient({deg}deg, hsla({hue}, {sat}%, {light}%,{" "}
+        {alpha}
         %)
       </span>
     </CodeOutput>
@@ -14,7 +15,7 @@ const Output = ({ hue, sat, light, alpha }) => {
 
 const CodeOutput = styled.div`
   flex-basis: 75%;
-  height: 20%;
+  height: 10%;
 
   border: 2px solid gray;
   border-radius: 5px;
@@ -29,6 +30,7 @@ const mapStateToProps = (state) => {
     sat,
     light,
     alpha,
+    deg: state.deg,
   };
 };
 
