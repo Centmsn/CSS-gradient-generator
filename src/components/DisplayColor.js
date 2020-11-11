@@ -3,9 +3,21 @@ import { connect } from "react-redux";
 
 import transparentBg from "../assets/paven.png";
 
-const DisplayColor = ({ hue, sat, light, alpha, deg }) => {
+const DisplayColor = ({ deg, gradient }) => {
+  const generateGradient = () => {
+    const length = Object.keys(gradient).length;
+    const output = [];
+    for (let i = 0; i < length; i++) {
+      output.push(
+        `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%) ${gradient[i].w}%`
+      );
+    }
+
+    return `linear-gradient(${deg}deg, ${output.join(",")})`;
+  };
+
   return (
-    <ColorOutput hue={hue} sat={sat} light={light} alpha={alpha} deg={deg}>
+    <ColorOutput generateGradient={generateGradient}>
       <InnerBg />
     </ColorOutput>
   );
@@ -13,7 +25,7 @@ const DisplayColor = ({ hue, sat, light, alpha, deg }) => {
 
 const ColorOutput = styled.div.attrs((props) => ({
   style: {
-    background: `linear-gradient(${props.deg}deg, hsla(${props.hue}, ${props.sat}%, ${props.light}%, ${props.alpha}%) 16%, rgba(13,101,191,1) 62%)`,
+    background: props.generateGradient(),
   },
 }))`
   position: absolute;
@@ -41,11 +53,8 @@ const mapStateToProps = (state) => {
   const { hue, sat, light, alpha } = state.colorPicked;
 
   return {
-    hue,
-    sat,
-    light,
-    alpha,
     deg: state.deg,
+    gradient: state.gradient,
   };
 };
 

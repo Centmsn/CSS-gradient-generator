@@ -1,38 +1,66 @@
-import { useState, useRef } from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { useState, useRef } from "react";
 
+import { changeActiveCol, setActiveWidth, setActiveCol } from "../actions";
 import Draggable from "./Draggable";
 
-const GradientOptions = () => {
-  const [colorsAmount, setColorsAmount] = useState(2);
-  const bar = useRef(null);
+const GradientOptions = ({
+  hue,
+  light,
+  sat,
+  alpha,
+  active,
+  gradient,
+  changeActiveCol,
+  setActiveWidth,
+  setActiveCol,
+}) => {
+  const [colorsAmount, setColorsAmount] = useState(1);
+  const [colorsPosition, setColorsPosition] = useState({
+    0: { x: 20 },
+    1: { x: 70 },
+  });
+  const gradientBar = useRef(null);
 
-  const startSlide = (e) => {
-    document.addEventListener("mouseup", stopSlide);
-    document.addEventListener("mousemove", changeColorPosition);
-  };
+  const changeColorPosition = (e, index) => {
+    changeActiveCol(index);
+    const { width, left } = gradientBar.current.getBoundingClientRect();
 
-  const stopSlide = () => {
-    document.removeEventListener("mousemove", changeColorPosition);
-    document.removeEventListener("mouseup", stopSlide);
-  };
-
-  const changeColorPosition = (e) => {
-    const { left, width } = e.target.parentNode.getBoundingClientRect();
-    console.log(e.target);
-    e.target.style.left = `${e.clientX - left + 10}px`;
+    setColorsPosition((prev) => ({
+      ...prev,
+      [index]: { x: e.clientX - left + 10 },
+    }));
+    // !sets on width of the color, hsla is undefined until color change
+    setActiveWidth((e.clientX - left + 10) * (100 / width), index);
   };
 
   const addGradientColor = (e) => {
+    const { left } = gradientBar.current.getBoundingClientRect();
+    if (e.target !== gradientBar.current) return;
     setColorsAmount((prev) => prev + 1);
+
+    setColorsPosition((prev) => {
+      return { ...prev, [colorsAmount + 1]: { x: e.clientX - left - 10 } };
+    });
+
+    setActiveCol({ index: colorsAmount + 1, h: 0, s: 100, l: 50, a: 100 });
   };
 
   const generateSliders = () => {
     const sliders = [];
+    for (let i = 0; i <= colorsAmount; i++) {
+      const sliderCol = `hsl(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%)`;
 
-    for (let i = 0; i < colorsAmount; i++) {
       sliders.push(
-        <Draggable key={i} onMouseDown={startSlide} left={50 * i + 20} />
+        <Draggable
+          key={i}
+          left={colorsPosition[i].x}
+          func={(e) => changeColorPosition(e, i)}
+          active={i === active ? true : false}
+          wide="true"
+          color={sliderCol}
+        />
       );
     }
 
@@ -40,15 +68,24 @@ const GradientOptions = () => {
   };
 
   return (
-    <Bar onClick={addGradientColor} ref={bar}>
+    <Bar
+      onMouseDown={addGradientColor}
+      hue={hue}
+      light={light}
+      alpha={alpha}
+      sat={sat}
+      ref={gradientBar}
+    >
       {generateSliders()}
     </Bar>
   );
 };
 
-export default GradientOptions;
-
-const Bar = styled.div`
+const Bar = styled.div.attrs((props) => ({
+  style: {
+    background: `linear-gradient(90deg, hsla(${props.hue}, ${props.sat}%, ${props.light}%, ${props.alpha}%) 16%, rgba(13,101,191,1) 62%)`,
+  },
+}))`
   position: relative;
   grid-area: 8/1/10/4;
 
@@ -58,19 +95,22 @@ const Bar = styled.div`
   cursor: pointer;
 `;
 
-// const Slider = styled.div.attrs(({ left }) => ({
-//   style: {
-//     left: left,
-//   },
-// }))`
-//   z-index: 999;
-//   position: absolute;
-//   transform: translateY(-10%);
+const mapStateToProps = (state) => {
+  const { hue, sat, light, alpha } = state.colorPicked;
 
-//   height: 125%;
-//   width: 20px;
-//   border: 2px solid black;
-//   border-radius: 5px;
+  return {
+    hue,
+    sat,
+    light,
+    alpha,
+    deg: state.deg,
+    active: state.colId,
+    gradient: state.gradient,
+  };
+};
 
-//   background-color: black;
-// `;
+export default connect(mapStateToProps, {
+  changeActiveCol,
+  setActiveWidth,
+  setActiveCol,
+})(GradientOptions);

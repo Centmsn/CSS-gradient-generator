@@ -43,7 +43,7 @@ const DegreeOptions = ({ setDeg, degrees }) => {
     <>
       <Bar ref={degreeBar}>
         <Draggable left={leftOffset} func={setGradientDegrees} />
-        <InnerBar ref={innerBar} x={leftOffset + 10} />
+        <InnerBar ref={innerBar} offset={leftOffset + 12} />
       </Bar>
       <Input
         type="number"
@@ -64,25 +64,29 @@ const Bar = styled.div`
   background-color: gray;
 `;
 
-const InnerBar = styled.div.attrs(({ x }) => ({
+const InnerBar = styled.div.attrs(({ offset }) => ({
   style: {
-    width: `${x}px`,
+    width: offset,
   },
 }))`
   position: absolute;
-  top: 0;
+  top: 0px;
   right: 0;
-  bottom: 0;
+  bottom: 0px;
   left: 0;
 
   border-radius: 5px;
-  background-color: orange;
+  background-color: lightgray;
 `;
 
 const Input = styled.input`
   grid-area: 6/3/7/4;
 
   width: 25%;
+
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 5px;
 `;
 
 const mapStateToProps = (state) => {

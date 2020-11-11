@@ -100,7 +100,7 @@ const Settings = styled.div`
 
   border: 2px solid gray;
   border-radius: 5px;
-  background-color: whitesmoke;
+  background-color: white;
   padding: 10px;
 `;
 

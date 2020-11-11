@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
+import { useEffect } from "react";
+import { setActiveCol } from "../actions";
 
-const Output = ({ hue, sat, light, alpha, deg }) => {
+const Output = ({ hue, sat, light, alpha, deg, setActiveCol, active }) => {
+  useEffect(() => {
+    setActiveCol({ index: active, h: hue, s: sat, l: light, a: alpha });
+  }, [hue, sat, light, alpha, deg]);
+
   return (
     <CodeOutput>
       <span>
@@ -19,7 +25,9 @@ const CodeOutput = styled.div`
 
   border: 2px solid gray;
   border-radius: 5px;
-  background-color: whitesmoke;
+  background-color: white;
+
+  padding: 10px;
 `;
 
 const mapStateToProps = (state) => {
@@ -31,7 +39,8 @@ const mapStateToProps = (state) => {
     light,
     alpha,
     deg: state.deg,
+    active: state.colId,
   };
 };
 
-export default connect(mapStateToProps, {})(Output);
+export default connect(mapStateToProps, { setActiveCol })(Output);
