@@ -31,8 +31,7 @@ const GradientOptions = ({
       ...prev,
       [index]: { x: e.clientX - left + 10 },
     }));
-    // !sets on width of the color, hsla is undefined until color change
-    setActiveWidth((e.clientX - left + 10) * (100 / width), index);
+    setActiveWidth(Math.round((e.clientX - left + 10) * (100 / width)), index);
   };
 
   const addGradientColor = (e) => {
@@ -57,6 +56,7 @@ const GradientOptions = ({
           key={i}
           left={colorsPosition[i].x}
           func={(e) => changeColorPosition(e, i)}
+          clickFunc={() => changeActiveCol(i)}
           active={i === active ? true : false}
           wide="true"
           color={sliderCol}

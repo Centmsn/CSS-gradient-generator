@@ -6,6 +6,7 @@ import {
   SETACTIVECOL,
   CHANGEACTIVECOL,
   SETACTIVEWIDTH,
+  SETGRADIENTCODE,
 } from "./types";
 
 export const setH = (deg) => {
@@ -57,5 +58,12 @@ export const setActiveWidth = (width, index) => {
   return {
     type: SETACTIVEWIDTH,
     payload: { index, width },
+  };
+};
+
+export const setGradientCode = (code) => {
+  return {
+    type: SETGRADIENTCODE,
+    payload: code,
   };
 };

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Draggable = ({ func, left, active, wide, color }) => {
+const Draggable = ({ func, clickFunc, left, active, wide, color }) => {
   const setColor = () => {
     document.addEventListener("mouseup", stopSlide);
     document.addEventListener("mousemove", func);
@@ -14,6 +14,7 @@ const Draggable = ({ func, left, active, wide, color }) => {
   return (
     <Slider
       onMouseDown={setColor}
+      onClick={clickFunc}
       left={left}
       active={active}
       wide={wide}

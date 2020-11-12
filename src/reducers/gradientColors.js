@@ -31,6 +31,7 @@ export default (state = INITIAL_STATE, action) => {
           w: action.payload.width,
         },
       };
+
     default:
       return state;
   }

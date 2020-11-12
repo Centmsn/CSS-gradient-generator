@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
+import { useEffect } from "react";
 
+import { setGradientCode } from "../actions";
 import transparentBg from "../assets/paven.png";
 
-const DisplayColor = ({ deg, gradient }) => {
-  const generateGradient = () => {
+const DisplayColor = ({ deg, gradient, code, setGradientCode }) => {
+  useEffect(() => {
     const length = Object.keys(gradient).length;
     const output = [];
     for (let i = 0; i < length; i++) {
@@ -13,11 +15,11 @@ const DisplayColor = ({ deg, gradient }) => {
       );
     }
 
-    return `linear-gradient(${deg}deg, ${output.join(",")})`;
-  };
+    setGradientCode(`linear-gradient(${deg}deg, ${output.join(", ")})`);
+  }, [gradient, deg, setGradientCode]);
 
   return (
-    <ColorOutput generateGradient={generateGradient}>
+    <ColorOutput code={code}>
       <InnerBg />
     </ColorOutput>
   );
@@ -25,7 +27,7 @@ const DisplayColor = ({ deg, gradient }) => {
 
 const ColorOutput = styled.div.attrs((props) => ({
   style: {
-    background: props.generateGradient(),
+    background: props.code,
   },
 }))`
   position: absolute;
@@ -50,12 +52,11 @@ const InnerBg = styled.div`
 `;
 
 const mapStateToProps = (state) => {
-  const { hue, sat, light, alpha } = state.colorPicked;
-
   return {
     deg: state.deg,
     gradient: state.gradient,
+    code: state.code,
   };
 };
 
-export default connect(mapStateToProps, {})(DisplayColor);
+export default connect(mapStateToProps, { setGradientCode })(DisplayColor);

@@ -3,18 +3,23 @@ import { connect } from "react-redux";
 import { useEffect } from "react";
 import { setActiveCol } from "../actions";
 
-const Output = ({ hue, sat, light, alpha, deg, setActiveCol, active }) => {
+const Output = ({
+  hue,
+  sat,
+  light,
+  alpha,
+  deg,
+  setActiveCol,
+  active,
+  code,
+}) => {
   useEffect(() => {
     setActiveCol({ index: active, h: hue, s: sat, l: light, a: alpha });
   }, [hue, sat, light, alpha, deg]);
 
   return (
     <CodeOutput>
-      <span>
-        background: linear-gradient({deg}deg, hsla({hue}, {sat}%, {light}%,{" "}
-        {alpha}
-        %)
-      </span>
+      <span>background: {code}</span>
     </CodeOutput>
   );
 };
@@ -27,6 +32,7 @@ const CodeOutput = styled.div`
   border-radius: 5px;
   background-color: white;
 
+  font-family: "Inconsolata", monospace;
   padding: 10px;
 `;
 
@@ -40,6 +46,7 @@ const mapStateToProps = (state) => {
     alpha,
     deg: state.deg,
     active: state.colId,
+    code: state.code,
   };
 };
 
