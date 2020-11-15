@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { setH, setLs } from "../actions";
@@ -8,13 +8,30 @@ import TransparentOptions from "./TransparentOptions";
 import DegreeOptions from "./DegreeOptions";
 import Draggable from "./Draggable";
 
-const Options = ({ setH, setLs, hue }) => {
+const Options = ({ setH, setLs, hue, active, gradient }) => {
   const colorHue = useRef(null);
   const colorSat = useRef(null);
   const satSelector = useRef(null);
 
   const [hueOffset, setHueOffset] = useState(null);
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    // TODO: set also LIGHTNESS and SATURATION
+    const { width } = colorHue.current.getBoundingClientRect();
+    const satDimensions = colorSat.current.getBoundingClientRect();
+
+    setHueOffset((width / 360) * gradient[active].h);
+
+    setSatPosition({
+      x: (satDimensions.width / 100) * gradient[active].s - 6.5,
+      y:
+        satDimensions.height -
+        (satDimensions.height / 100) *
+          gradient[active].l *
+          (1 + gradient[active].s / 100),
+    });
+  }, [active]);
 
   const setColor = (e) => {
     const { left, width } = colorHue.current.getBoundingClientRect();
@@ -31,7 +48,7 @@ const Options = ({ setH, setLs, hue }) => {
     }
   };
 
-  const setSaturation = (e) => {
+  const setSaturation = () => {
     document.addEventListener("mousemove", startSaturationSlide);
     document.addEventListener("mouseup", stopSaturationSlide);
   };
@@ -172,6 +189,8 @@ const ColorPickerSelector = styled.div.attrs((props) => ({
 const mapStateToProps = (state) => {
   return {
     hue: state.colorPicked.hue,
+    active: state.colId,
+    gradient: state.gradient,
   };
 };
 

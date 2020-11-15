@@ -6,15 +6,12 @@ import { changeActiveCol, setActiveWidth, setActiveCol } from "../actions";
 import Draggable from "./Draggable";
 
 const GradientOptions = ({
-  hue,
-  light,
-  sat,
-  alpha,
   active,
   gradient,
   changeActiveCol,
   setActiveWidth,
   setActiveCol,
+  code,
 }) => {
   const [colorsAmount, setColorsAmount] = useState(1);
   const [colorsPosition, setColorsPosition] = useState({
@@ -35,20 +32,22 @@ const GradientOptions = ({
   };
 
   const addGradientColor = (e) => {
-    const { left } = gradientBar.current.getBoundingClientRect();
     if (e.target !== gradientBar.current) return;
-    setColorsAmount((prev) => prev + 1);
+    const { left } = gradientBar.current.getBoundingClientRect();
 
+    setColorsAmount((prev) => prev + 1);
     setColorsPosition((prev) => {
       return { ...prev, [colorsAmount + 1]: { x: e.clientX - left - 10 } };
     });
-
     setActiveCol({ index: colorsAmount + 1, h: 0, s: 100, l: 50, a: 100 });
   };
 
   const generateSliders = () => {
     const sliders = [];
+
     for (let i = 0; i <= colorsAmount; i++) {
+      if (i >= Object.keys(gradient).length) return;
+
       const sliderCol = `hsl(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%)`;
 
       sliders.push(
@@ -70,11 +69,10 @@ const GradientOptions = ({
   return (
     <Bar
       onMouseDown={addGradientColor}
-      hue={hue}
-      light={light}
-      alpha={alpha}
-      sat={sat}
       ref={gradientBar}
+      //  gradient bar always keeps 90deg
+      // to represent colors placement
+      color={code.replace(/\d{2,3}deg/gi, "90deg")}
     >
       {generateSliders()}
     </Bar>
@@ -83,7 +81,7 @@ const GradientOptions = ({
 
 const Bar = styled.div.attrs((props) => ({
   style: {
-    background: `linear-gradient(90deg, hsla(${props.hue}, ${props.sat}%, ${props.light}%, ${props.alpha}%) 16%, rgba(13,101,191,1) 62%)`,
+    background: props.color,
   },
 }))`
   position: relative;
@@ -96,16 +94,13 @@ const Bar = styled.div.attrs((props) => ({
 `;
 
 const mapStateToProps = (state) => {
-  const { hue, sat, light, alpha } = state.colorPicked;
+  const { deg, colId, gradient, code } = state;
 
   return {
-    hue,
-    sat,
-    light,
-    alpha,
-    deg: state.deg,
-    active: state.colId,
-    gradient: state.gradient,
+    deg,
+    active: colId,
+    gradient,
+    code,
   };
 };
 

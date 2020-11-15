@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { useState, useRef } from "react";
 
 import Draggable from "./Draggable";
-
 import { setA } from "../actions";
+
 import transparentBg from "../assets/paven.png";
 
 const TransparentOptions = ({ setA, hue, sat, light }) => {
