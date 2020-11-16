@@ -20,6 +20,19 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
     setSliderPosition(position);
   }, [active]);
 
+  const handleManualOpacityChange = (e) => {
+    // TODO: limit max and min input value
+    const { width } = transparencyBar.current.getBoundingClientRect();
+
+    if (e.target.value > 100 || e.target.value < 0) {
+      e.target.value = 0;
+    }
+
+    setSliderPosition(width - (width / 100) * e.target.value);
+
+    setA(e.target.value);
+  };
+
   const setTransparency = (e) => {
     const { left, width } = transparencyBar.current.getBoundingClientRect();
     const opacity = Math.floor(100 - ((e.clientX - left) / width) * 100);
@@ -37,10 +50,19 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
   };
 
   return (
-    <Bar hue={hue} sat={sat} light={light} ref={transparencyBar}>
-      <InnerBar />
-      <Draggable func={setTransparency} left={sliderPosition} />
-    </Bar>
+    <>
+      <Bar hue={hue} sat={sat} light={light} ref={transparencyBar}>
+        <InnerBar />
+        <Draggable func={setTransparency} left={sliderPosition} />
+      </Bar>
+      <Input
+        type="number"
+        min="0"
+        max="100"
+        value={gradient[active].a}
+        onChange={handleManualOpacityChange}
+      />
+    </>
   );
 };
 
@@ -66,6 +88,16 @@ const InnerBar = styled.div`
   background-color: white;
   background-image: url(${transparentBg});
   border-radius: 5px;
+`;
+
+const Input = styled.input`
+  grid-area: 5/2/6/3;
+
+  width: 25%;
+  border: 2px solid black;
+  border-radius: 5px;
+
+  padding: 5px;
 `;
 
 const mapStateToProps = (state) => {

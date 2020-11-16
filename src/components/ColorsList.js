@@ -76,9 +76,9 @@ const ListColor = styled.div`
   flex-basis: 65%;
   border: 2px solid black;
   border-radius: 5px;
-  background-color: ${(props) => props.color};
-
   box-shadow: inset 0 0 0 3px white;
+
+  background-color: ${(props) => props.color};
   transition: transform 300ms;
   cursor: pointer;
 `;
