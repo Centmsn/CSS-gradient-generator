@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { changeActiveCol, setActiveWidth, setActiveCol } from "../actions";
 import Draggable from "./Draggable";
@@ -20,13 +20,21 @@ const GradientOptions = ({
   });
   const gradientBar = useRef(null);
 
+  useEffect(() => {
+    setColorsAmount(Object.keys(gradient).length - 1);
+  }, [gradient]);
+
   const changeColorPosition = (e, index) => {
     changeActiveCol(index);
     const { width, left } = gradientBar.current.getBoundingClientRect();
 
+    if (e.clientX - left + 10 > width || e.clientX - left < -10) {
+      return;
+    }
+
     setColorsPosition((prev) => ({
       ...prev,
-      [index]: { x: e.clientX - left + 10 },
+      [index]: { x: e.clientX - left - 10 },
     }));
     setActiveWidth(Math.round((e.clientX - left + 10) * (100 / width)), index);
   };
@@ -91,6 +99,19 @@ const Bar = styled.div.attrs((props) => ({
   border-radius: 5px;
 
   cursor: pointer;
+
+  &:hover {
+    &::after {
+      content: "Click to add color";
+      position: absolute;
+      left: 85%;
+      top: 120%;
+
+      border: 2px solid black;
+      border-radius: 5px;
+      padding: 5px;
+    }
+  }
 `;
 
 const mapStateToProps = (state) => {

@@ -80,7 +80,7 @@ const InnerBar = styled.div.attrs(({ offset }) => ({
 `;
 
 const Input = styled.input`
-  grid-area: 6/3/7/4;
+  grid-area: 7/2/8/3;
 
   width: 25%;
 

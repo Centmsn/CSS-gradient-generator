@@ -1,15 +1,24 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import Draggable from "./Draggable";
 import { setA } from "../actions";
 
 import transparentBg from "../assets/paven.png";
 
-const TransparentOptions = ({ setA, hue, sat, light }) => {
+const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
   const [sliderPosition, setSliderPosition] = useState(0);
   const transparencyBar = useRef(null);
+
+  useEffect(() => {
+    const { width } = transparencyBar.current.getBoundingClientRect();
+    const position = width - (width / 100) * gradient[active].a;
+
+    setA(gradient[active].a);
+
+    setSliderPosition(position);
+  }, [active]);
 
   const setTransparency = (e) => {
     const { left, width } = transparencyBar.current.getBoundingClientRect();
@@ -66,6 +75,8 @@ const mapStateToProps = (state) => {
     hue,
     sat,
     light,
+    active: state.colId,
+    gradient: state.gradient,
   };
 };
 

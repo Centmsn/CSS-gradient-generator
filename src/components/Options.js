@@ -3,10 +3,11 @@ import { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { setH, setLs } from "../actions";
-import GradientOptions from "./GradientOptions";
-import TransparentOptions from "./TransparentOptions";
-import DegreeOptions from "./DegreeOptions";
 import Draggable from "./Draggable";
+import DegreeOptions from "./DegreeOptions";
+import GradientOptions from "./GradientOptions";
+import ColorsList from "./ColorsList";
+import TransparentOptions from "./TransparentOptions";
 
 const Options = ({ setH, setLs, hue, active, gradient }) => {
   const colorHue = useRef(null);
@@ -17,19 +18,22 @@ const Options = ({ setH, setLs, hue, active, gradient }) => {
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    // TODO: set also LIGHTNESS and SATURATION
     const { width } = colorHue.current.getBoundingClientRect();
     const satDimensions = colorSat.current.getBoundingClientRect();
+
+    setH(gradient[active].h);
+    setLs(gradient[active].s, gradient[active].l);
 
     setHueOffset((width / 360) * gradient[active].h);
 
     setSatPosition({
-      x: (satDimensions.width / 100) * gradient[active].s - 6.5,
+      x: (satDimensions.width / 100) * gradient[active].s - 7.5,
       y:
         satDimensions.height -
         (satDimensions.height / 100) *
           gradient[active].l *
-          (1 + gradient[active].s / 100),
+          (1 + gradient[active].s / 100) -
+        7.5,
     });
   }, [active]);
 
@@ -100,6 +104,7 @@ const Options = ({ setH, setLs, hue, active, gradient }) => {
       <TransparentOptions />
       <DegreeOptions />
       <GradientOptions />
+      <ColorsList />
     </Settings>
   );
 };

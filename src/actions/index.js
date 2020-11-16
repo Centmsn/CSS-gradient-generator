@@ -7,6 +7,7 @@ import {
   CHANGEACTIVECOL,
   SETACTIVEWIDTH,
   SETGRADIENTCODE,
+  REMOVEGRADIENTCOL,
 } from "./types";
 
 export const setH = (deg) => {
@@ -65,5 +66,12 @@ export const setGradientCode = (code) => {
   return {
     type: SETGRADIENTCODE,
     payload: code,
+  };
+};
+
+export const removeGradientCol = (index) => {
+  return {
+    type: REMOVEGRADIENTCOL,
+    payload: index,
   };
 };

@@ -1,4 +1,9 @@
-import { SETACTIVECOL, SETACTIVEWIDTH } from "../actions/types";
+import _ from "lodash";
+import {
+  SETACTIVECOL,
+  SETACTIVEWIDTH,
+  REMOVEGRADIENTCOL,
+} from "../actions/types";
 
 const INITIAL_STATE = {
   0: {
@@ -31,6 +36,18 @@ export default (state = INITIAL_STATE, action) => {
           w: action.payload.width,
         },
       };
+
+    case REMOVEGRADIENTCOL:
+      const prevState = _.omit({ ...state }, action.payload);
+      const newState = {};
+
+      const keys = Object.keys(prevState);
+
+      for (let i = 0; i < keys.length; i++) {
+        newState[i] = prevState[keys[i]];
+      }
+
+      return newState;
 
     default:
       return state;
