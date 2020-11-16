@@ -97,7 +97,6 @@ const Bar = styled.div.attrs((props) => ({
   position: relative;
   grid-area: 8/1/10/4;
 
-  border: 2px solid black;
   border-radius: 5px;
 
   cursor: pointer;
@@ -109,8 +108,7 @@ const Bar = styled.div.attrs((props) => ({
       left: 85%;
       top: 120%;
 
-      border: 2px solid black;
-      border-radius: 5px;
+      font-family: "Inconsolata", monospace;
       padding: 5px;
     }
   }

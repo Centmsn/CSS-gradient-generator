@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 
 import { removeGradientCol, changeActiveCol } from "../actions";
 
@@ -11,8 +12,15 @@ const ColorsList = ({
   removeGradientCol,
   changeActiveCol,
 }) => {
+  const [displayTooltip, setDisplayTooltip] = useState(false);
+
   const removeColor = (index) => {
-    if (Object.keys(gradient).length <= 2) return;
+    if (Object.keys(gradient).length <= 2) {
+      setDisplayTooltip(true);
+
+      setTimeout(() => setDisplayTooltip(false), 3000);
+      return;
+    }
 
     removeGradientCol(index);
   };
@@ -45,10 +53,15 @@ const ColorsList = ({
     return list;
   };
 
+  const tooltip = displayTooltip ? (
+    <ListEl>Gradient must have at least 2 colors</ListEl>
+  ) : null;
+
   return (
     <List>
-      <ListTitle>Colors</ListTitle>
+      <ListTitle>Gradient colors</ListTitle>
       <ul>{renderList()}</ul>
+      {tooltip}
     </List>
   );
 };
@@ -56,11 +69,17 @@ const ColorsList = ({
 const List = styled.div`
   grid-area: 1/3/8/4;
 
+  border-radius: 5px;
+
+  background-color: ${(props) => props.theme.darkBlue};
+  color: white;
+  font-family: "Inconsolata", monospace;
   overflow-y: auto;
 `;
 
 const ListTitle = styled.h3`
   text-align: center;
+  user-select: none;
 `;
 
 const ListEl = styled.li`
@@ -91,6 +110,7 @@ const Btn = styled.button`
   border: none;
   outline: none;
   background: none;
+  color: white;
 
   font-size: 1.5rem;
   cursor: pointer;

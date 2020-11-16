@@ -21,7 +21,6 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
   }, [active]);
 
   const handleManualOpacityChange = (e) => {
-    // TODO: limit max and min input value
     const { width } = transparencyBar.current.getBoundingClientRect();
 
     if (e.target.value > 100 || e.target.value < 0) {
@@ -59,7 +58,7 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
         type="number"
         min="0"
         max="100"
-        value={gradient[active].a}
+        value={gradient[active] ? gradient[active].a : null}
         onChange={handleManualOpacityChange}
       />
     </>

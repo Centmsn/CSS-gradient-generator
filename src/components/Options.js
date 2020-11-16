@@ -120,7 +120,6 @@ const Settings = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(10, 1fr);
 
-  border: 2px solid gray;
   border-radius: 5px;
   background-color: white;
   padding: 10px;

@@ -1,17 +1,20 @@
 import styled, { createGlobalStyle } from "styled-components";
 
+import DisplayColor from "./DisplayColor";
 import Options from "./Options";
 import Output from "./Output";
-import DisplayColor from "./DisplayColor";
+import Theme from "../context/Theme";
 
 const App = () => {
   return (
-    <Wrapper>
-      <GlobalReset />
-      <DisplayColor />
-      <Options />
-      <Output />
-    </Wrapper>
+    <Theme>
+      <Wrapper>
+        <GlobalReset />
+        <DisplayColor />
+        <Options />
+        <Output />
+      </Wrapper>
+    </Theme>
   );
 };
 

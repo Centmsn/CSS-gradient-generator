@@ -28,9 +28,9 @@ const CodeOutput = styled.div`
   flex-basis: 75%;
   height: 10%;
 
-  border: 2px solid gray;
   border-radius: 5px;
-  background-color: white;
+  background-color: ${(props) => props.theme.darkBlue};
+  color: white;
 
   font-family: "Inconsolata", monospace;
   padding: 10px;
