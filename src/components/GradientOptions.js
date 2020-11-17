@@ -82,7 +82,7 @@ const GradientOptions = ({
       ref={gradientBar}
       //  gradient bar always keeps 90deg
       // to represent colors placement
-      color={code.replace(/\d{2,3}deg/gi, "90deg")}
+      color={code.replace(/\d{1,3}deg/gi, "90deg")}
     >
       {generateSliders()}
     </Bar>
@@ -97,6 +97,7 @@ const Bar = styled.div.attrs((props) => ({
   position: relative;
   grid-area: 8/1/10/4;
 
+  border: 2px solid ${(props) => props.theme.darkGray};
   border-radius: 5px;
 
   cursor: pointer;

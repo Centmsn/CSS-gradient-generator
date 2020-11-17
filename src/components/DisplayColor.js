@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 
-import { convertHslToRgb } from "../helpers/HslaToRgb";
+import { convertHslToRgb } from "../helpers";
 import { setGradientCode } from "../actions";
 import transparentBg from "../assets/paven.png";
 
@@ -29,7 +29,7 @@ const DisplayColor = ({ deg, gradient, code, setGradientCode, mode }) => {
     }
 
     setGradientCode(`linear-gradient(${deg}deg, ${output.join(", ")})`);
-  }, [gradient, deg, setGradientCode]);
+  }, [gradient, deg, setGradientCode, mode]);
 
   return (
     <ColorOutput code={code}>

@@ -8,6 +8,7 @@ import { setA } from "../actions";
 import transparentBg from "../assets/paven.png";
 
 const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
+  const [displayTooltip, setDisplayTooltip] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(0);
   const transparencyBar = useRef(null);
 
@@ -25,6 +26,10 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
 
     if (e.target.value > 100 || e.target.value < 0) {
       e.target.value = 0;
+
+      setDisplayTooltip(true);
+
+      setTimeout(() => setDisplayTooltip(false), 3000);
     }
 
     setSliderPosition(width - (width / 100) * e.target.value);
@@ -48,19 +53,25 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
     }
   };
 
+  const tooltip = displayTooltip ? <Tooltip>Range is 0-100</Tooltip> : null;
+
   return (
     <>
       <Bar hue={hue} sat={sat} light={light} ref={transparencyBar}>
         <InnerBar />
         <Draggable func={setTransparency} left={sliderPosition} />
       </Bar>
-      <Input
-        type="number"
-        min="0"
-        max="100"
-        value={gradient[active] ? gradient[active].a : null}
-        onChange={handleManualOpacityChange}
-      />
+      <Label>
+        <Input
+          type="number"
+          min="0"
+          max="100"
+          value={gradient[active] ? gradient[active].a : null}
+          onChange={handleManualOpacityChange}
+        />
+        opacity
+        {tooltip}
+      </Label>
     </>
   );
 };
@@ -89,17 +100,36 @@ const InnerBar = styled.div`
   border-radius: 5px;
 `;
 
-const Input = styled.input`
+const Label = styled.label`
+  position: relative;
   grid-area: 5/2/6/3;
 
+  color: gray;
+  font-family: ${(props) => props.theme.mainFont};
+
+  user-select: none;
+`;
+
+const Input = styled.input`
   width: 15%;
   min-width: 50px;
+
+  margin-right: 2%;
+
   border: 2px solid ${(props) => props.theme.darkGray};
   border-radius: 5px;
   outline: none;
   padding: 5px;
 
   font-family: ${(props) => props.theme.mainFont};
+`;
+
+const Tooltip = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  color: gray;
 `;
 
 const mapStateToProps = (state) => {

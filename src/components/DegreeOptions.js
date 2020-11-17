@@ -7,6 +7,7 @@ import { setDeg } from "../actions";
 
 const DegreeOptions = ({ setDeg, degrees }) => {
   const [leftOffset, setLeftOffset] = useState(90);
+  const [displayTooltip, setDisplayTooltip] = useState(false);
 
   const innerBar = useRef(null);
   const degreeBar = useRef(null);
@@ -33,11 +34,21 @@ const DegreeOptions = ({ setDeg, degrees }) => {
     if (e.target.value > 360 || e.target.value < 0) {
       setDeg(0);
       setLeftOffset(-6);
+
+      setDisplayTooltip(true);
+
+      setTimeout(() => setDisplayTooltip(false), 3000);
     } else {
       setDeg(e.target.value);
       setLeftOffset(((parseInt(e.target.value) - 6.5) / 360) * width);
     }
   };
+
+  const tooltip = displayTooltip ? (
+    <Tooltip>
+      Range is 0-360<sup>o</sup>
+    </Tooltip>
+  ) : null;
 
   return (
     <>
@@ -45,13 +56,17 @@ const DegreeOptions = ({ setDeg, degrees }) => {
         <Draggable left={leftOffset} func={setGradientDegrees} />
         <InnerBar ref={innerBar} offset={leftOffset + 12} />
       </Bar>
-      <Input
-        type="number"
-        max="360"
-        min="0"
-        value={degrees}
-        onChange={handleManualDegreeSet}
-      />
+      <Label>
+        <Input
+          type="number"
+          max="360"
+          min="0"
+          value={degrees}
+          onChange={handleManualDegreeSet}
+        />
+        direction
+        {tooltip}
+      </Label>
     </>
   );
 };
@@ -75,8 +90,19 @@ const InnerBar = styled.div.attrs(({ offset }) => ({
   bottom: 0px;
   left: 0;
 
-  border-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
   background-color: lightgray;
+`;
+
+const Label = styled.label`
+  position: relative;
+  grid-area: 7/2/8/3;
+
+  color: gray;
+  font-family: ${(props) => props.theme.mainFont};
+
+  user-select: none;
 `;
 
 const Input = styled.input`
@@ -85,12 +111,23 @@ const Input = styled.input`
   width: 15%;
   min-width: 50px;
 
+  margin-right: 2%;
+
   border: 2px solid ${(props) => props.theme.darkGray};
   border-radius: 5px;
   outline: none;
   padding: 5px;
 
   font-family: ${(props) => props.theme.mainFont};
+`;
+
+const Tooltip = styled.div`
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  color: gray;
 `;
 
 const mapStateToProps = (state) => {

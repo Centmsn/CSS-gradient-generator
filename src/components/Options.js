@@ -23,6 +23,7 @@ const Options = ({
   const colorSat = useRef(null);
   const satSelector = useRef(null);
 
+  const [colorInputs, setColorInputs] = useState({});
   const [hueOffset, setHueOffset] = useState(null);
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
 
@@ -123,22 +124,17 @@ const Options = ({
       </ColorHue>
       <Wrapper>
         <Label>
-          R
+          {mode === "hsl" ? "H" : "R"}
           <Input />
         </Label>
 
         <Label>
-          G
+          {mode === "hsl" ? "S" : "G"}
           <Input />
         </Label>
 
         <Label>
-          B
-          <Input />
-        </Label>
-
-        <Label>
-          A
+          {mode === "hsl" ? "L" : "B"}
           <Input />
         </Label>
       </Wrapper>
