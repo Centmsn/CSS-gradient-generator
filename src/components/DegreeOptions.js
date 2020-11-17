@@ -63,6 +63,7 @@ const DegreeOptions = ({ setDeg, degrees }) => {
           min="0"
           value={degrees}
           onChange={handleManualDegreeSet}
+          incorrect={displayTooltip}
         />
         direction
         {tooltip}
@@ -76,7 +77,7 @@ const Bar = styled.div`
   grid-area: 6/2/7/3;
 
   border-radius: 5px;
-  background-color: gray;
+  background-color: ${(props) => props.theme.lightBlue};
 `;
 
 const InnerBar = styled.div.attrs(({ offset }) => ({
@@ -92,7 +93,7 @@ const InnerBar = styled.div.attrs(({ offset }) => ({
 
   border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
-  background-color: lightgray;
+  background-color: ${(props) => props.theme.darkBlue};
 `;
 
 const Label = styled.label`
@@ -113,12 +114,18 @@ const Input = styled.input`
 
   margin-right: 2%;
 
-  border: 2px solid ${(props) => props.theme.darkGray};
+  border: 2px solid
+    ${(props) => (props.incorrect ? props.theme.darkRed : props.theme.darkGray)};
   border-radius: 5px;
   outline: none;
   padding: 5px;
 
   font-family: ${(props) => props.theme.mainFont};
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 `;
 
 const Tooltip = styled.div`

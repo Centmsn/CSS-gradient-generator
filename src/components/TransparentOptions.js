@@ -68,6 +68,7 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
           max="100"
           value={gradient[active] ? gradient[active].a : null}
           onChange={handleManualOpacityChange}
+          incorrect={displayTooltip}
         />
         opacity
         {tooltip}
@@ -116,12 +117,18 @@ const Input = styled.input`
 
   margin-right: 2%;
 
-  border: 2px solid ${(props) => props.theme.darkGray};
+  border: 2px solid
+    ${(props) => (props.incorrect ? props.theme.darkRed : props.theme.darkGray)};
   border-radius: 5px;
   outline: none;
   padding: 5px;
 
   font-family: ${(props) => props.theme.mainFont};
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 `;
 
 const Tooltip = styled.div`

@@ -2,7 +2,9 @@ const { ThemeProvider } = require("styled-components");
 
 const theme = {
   darkBlue: "rgb(8, 35, 92)",
+  lightBlue: "rgb(38, 150, 201)",
   darkGray: "rgba(200, 200, 200)",
+  darkRed: "rgb(163, 23, 13)",
   mainFont: "'Inconsolata', monospace",
 };
 
