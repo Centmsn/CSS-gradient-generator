@@ -101,6 +101,27 @@ const Options = ({ setH, setLs, hue, active, gradient }) => {
       <ColorHue ref={colorHue}>
         <Draggable left={hueOffset} func={setColor} />
       </ColorHue>
+      <Wrapper>
+        <Label>
+          R
+          <Input />
+        </Label>
+
+        <Label>
+          G
+          <Input />
+        </Label>
+
+        <Label>
+          B
+          <Input />
+        </Label>
+
+        <Label>
+          A
+          <Input />
+        </Label>
+      </Wrapper>
       <TransparentOptions />
       <DegreeOptions />
       <GradientOptions />
@@ -120,7 +141,8 @@ const Settings = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(10, 1fr);
 
-  border-radius: 5px;
+  border: 4px solid ${(props) => props.theme.darkBlue};
+  border-radius: 10px;
   background-color: white;
   padding: 10px;
 `;
@@ -188,6 +210,40 @@ const ColorPickerSelector = styled.div.attrs((props) => ({
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px black;
   cursor: pointer;
+`;
+
+const Input = styled.input.attrs(() => ({
+  type: "number",
+  min: 0,
+  max: 255,
+}))`
+  width: 75%;
+
+  font-family: ${(props) => props.theme.mainFont};
+
+  border: 2px solid ${(props) => props.theme.darkGray};
+  border-radius: 5px;
+  outline: none;
+  padding: 3px;
+
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+`;
+
+const Wrapper = styled.div`
+  grid-area: 3/2/4/3;
+
+  display: flex;
+`;
+
+const Label = styled.label`
+  color: gray;
+  font-family: ${(props) => props.theme.mainFont};
+  user-select: none;
 `;
 
 const mapStateToProps = (state) => {

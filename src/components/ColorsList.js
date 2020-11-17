@@ -73,7 +73,7 @@ const List = styled.div`
 
   background-color: ${(props) => props.theme.darkBlue};
   color: white;
-  font-family: "Inconsolata", monospace;
+  font-family: ${(props) => props.theme.mainFont};
   overflow-y: auto;
 `;
 

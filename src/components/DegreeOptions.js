@@ -82,11 +82,15 @@ const InnerBar = styled.div.attrs(({ offset }) => ({
 const Input = styled.input`
   grid-area: 7/2/8/3;
 
-  width: 25%;
+  width: 15%;
+  min-width: 50px;
 
-  border: 2px solid black;
+  border: 2px solid ${(props) => props.theme.darkGray};
   border-radius: 5px;
+  outline: none;
   padding: 5px;
+
+  font-family: ${(props) => props.theme.mainFont};
 `;
 
 const mapStateToProps = (state) => {

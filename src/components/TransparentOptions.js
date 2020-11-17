@@ -92,11 +92,14 @@ const InnerBar = styled.div`
 const Input = styled.input`
   grid-area: 5/2/6/3;
 
-  width: 25%;
-  border: 2px solid black;
+  width: 15%;
+  min-width: 50px;
+  border: 2px solid ${(props) => props.theme.darkGray};
   border-radius: 5px;
-
+  outline: none;
   padding: 5px;
+
+  font-family: ${(props) => props.theme.mainFont};
 `;
 
 const mapStateToProps = (state) => {

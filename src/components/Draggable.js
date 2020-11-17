@@ -36,14 +36,14 @@ const Slider = styled.div.attrs(({ left, color }) => ({
   width: ${(props) => (props.wide ? "20px" : "12px")};
 
   border-radius: 5px;
-  border: 2px solid black;
-  box-shadow: ${(props) =>
-    props.active ? "0 0 0px 2px black" : "inset 0 0 0 2px white"};
-  transition: transform 300ms;
+  border: 2px solid ${(props) => (props.active ? "black" : "white")};
+
+  box-shadow: 0 0 3px 0 black;
+  transition: border 300ms;
   cursor: move;
 
   &:hover {
-    transform: scaleY(1.4) translateY(-10%);
+    box-shadow: 0 0 6px 0 black;
   }
 `;
 
