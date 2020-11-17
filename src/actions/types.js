@@ -7,3 +7,6 @@ export const SETACTIVECOL = "SETACTIVECOL";
 export const SETACTIVEWIDTH = "SETACTIVEWIDTH";
 export const SETGRADIENTCODE = "SETGRADIENTCODE";
 export const REMOVEGRADIENTCOL = "REMOVEGRADIENTCOL";
+
+export const HSL = "HSL";
+export const RGB = "RGB";

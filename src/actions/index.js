@@ -8,6 +8,8 @@ import {
   SETACTIVEWIDTH,
   SETGRADIENTCODE,
   REMOVEGRADIENTCOL,
+  RGB,
+  HSL,
 } from "./types";
 
 export const setH = (deg) => {
@@ -73,5 +75,17 @@ export const removeGradientCol = (index) => {
   return {
     type: REMOVEGRADIENTCOL,
     payload: index,
+  };
+};
+
+export const switchToRgb = () => {
+  return {
+    type: RGB,
+  };
+};
+
+export const switchToHsl = () => {
+  return {
+    type: HSL,
   };
 };

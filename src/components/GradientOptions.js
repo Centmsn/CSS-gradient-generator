@@ -67,7 +67,7 @@ const GradientOptions = ({
           func={(e) => changeColorPosition(e, i)}
           clickFunc={() => changeActiveCol(i)}
           active={i === active ? true : false}
-          wide="true"
+          wide
           color={sliderCol}
         />
       );
@@ -105,9 +105,12 @@ const Bar = styled.div.attrs((props) => ({
     &::after {
       content: "Click to add color";
       position: absolute;
-      left: 85%;
+      right: 0;
       top: 120%;
 
+      border-radius: 5px;
+      background-color: ${(props) => props.theme.darkBlue};
+      color: white;
       font-family: "Inconsolata", monospace;
       padding: 5px;
     }

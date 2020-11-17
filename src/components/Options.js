@@ -2,14 +2,23 @@ import styled from "styled-components";
 import { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { setH, setLs } from "../actions";
+import { setH, setLs, switchToHsl, switchToRgb } from "../actions";
 import Draggable from "./Draggable";
 import DegreeOptions from "./DegreeOptions";
 import GradientOptions from "./GradientOptions";
 import ColorsList from "./ColorsList";
 import TransparentOptions from "./TransparentOptions";
 
-const Options = ({ setH, setLs, hue, active, gradient }) => {
+const Options = ({
+  setH,
+  setLs,
+  hue,
+  active,
+  gradient,
+  mode,
+  switchToHsl,
+  switchToRgb,
+}) => {
   const colorHue = useRef(null);
   const colorSat = useRef(null);
   const satSelector = useRef(null);
@@ -82,6 +91,14 @@ const Options = ({ setH, setLs, hue, active, gradient }) => {
     }
   };
 
+  const handleModeChange = () => {
+    if (mode === "hsl") {
+      switchToRgb();
+    } else {
+      switchToHsl();
+    }
+  };
+
   const stopSaturationSlide = () => {
     document.removeEventListener("mousemove", startSaturationSlide);
     document.removeEventListener("mouseup", stopSaturationSlide);
@@ -89,6 +106,9 @@ const Options = ({ setH, setLs, hue, active, gradient }) => {
 
   return (
     <Settings>
+      <Button onClick={handleModeChange}>
+        Convert to {mode === "hsl" ? "RGB" : "HSL"}
+      </Button>
       <ColorPicker deg={hue} ref={colorSat}>
         <ColorPickerSelector
           onMouseDown={setSaturation}
@@ -145,6 +165,26 @@ const Settings = styled.div`
   border-radius: 10px;
   background-color: white;
   padding: 10px;
+`;
+
+const Button = styled.button`
+  grid-area: 1/1/2/2;
+
+  background: none;
+  border: 2px solid ${(props) => props.theme.darkBlue};
+  border-radius: 5px;
+  outline: none;
+
+  font-size: 1.25rem;
+  font-family: ${(props) => props.theme.mainFont};
+
+  transition: 300ms;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => props.theme.darkBlue};
+    color: white;
+  }
 `;
 
 const ColorPicker = styled.div.attrs(({ deg }) => ({
@@ -251,7 +291,13 @@ const mapStateToProps = (state) => {
     hue: state.colorPicked.hue,
     active: state.colId,
     gradient: state.gradient,
+    mode: state.output,
   };
 };
 
-export default connect(mapStateToProps, { setH, setLs })(Options);
+export default connect(mapStateToProps, {
+  setH,
+  setLs,
+  switchToRgb,
+  switchToHsl,
+})(Options);

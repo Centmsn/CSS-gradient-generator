@@ -34,6 +34,7 @@ const CodeOutput = styled.div`
 
   font-family: ${(props) => props.theme.mainFont};
   padding: 10px;
+  overflow-y: auto;
 `;
 
 const mapStateToProps = (state) => {

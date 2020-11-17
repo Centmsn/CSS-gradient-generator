@@ -2,17 +2,30 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 
+import { convertHslToRgb } from "../helpers/HslaToRgb";
 import { setGradientCode } from "../actions";
 import transparentBg from "../assets/paven.png";
 
-const DisplayColor = ({ deg, gradient, code, setGradientCode }) => {
+const DisplayColor = ({ deg, gradient, code, setGradientCode, mode }) => {
   useEffect(() => {
     const length = Object.keys(gradient).length;
     const output = [];
+
     for (let i = 0; i < length; i++) {
-      output.push(
-        `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%) ${gradient[i].w}%`
-      );
+      if (mode === "hsl") {
+        output.push(
+          `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%) ${gradient[i].w}%`
+        );
+      } else if (mode === "rgb") {
+        output.push(
+          `${convertHslToRgb(
+            gradient[i].h,
+            gradient[i].s,
+            gradient[i].l,
+            gradient[i].a
+          )} ${gradient[i].w}%`
+        );
+      }
     }
 
     setGradientCode(`linear-gradient(${deg}deg, ${output.join(", ")})`);
@@ -56,6 +69,7 @@ const mapStateToProps = (state) => {
     deg: state.deg,
     gradient: state.gradient,
     code: state.code,
+    mode: state.output,
   };
 };
 
