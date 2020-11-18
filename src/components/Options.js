@@ -70,21 +70,39 @@ const Options = ({
       height,
     } = satSelector.current.parentNode.getBoundingClientRect();
 
-    if (
-      e.clientX - left > width ||
-      e.clientX - left < 0 ||
-      e.clientY - top > height ||
-      e.clientY - top < 0
-    ) {
-      return;
-    } else {
-      const xLight = 2 - (e.clientX - left) / width;
-      const yLight = 100 - ((e.clientY - top) / height) * 100;
+    let containerLeft = e.clientX - left;
+    let containerTop = e.clientY - top;
 
-      setSatPosition({ x: e.clientX - left - 7.5, y: e.clientY - top - 7.5 });
-
-      setLs(((e.clientX - left) / width) * 100, (yLight / 2) * xLight);
+    if (containerLeft > width) {
+      containerLeft = width;
+    } else if (containerLeft < 0) {
+      containerLeft = 0;
     }
+
+    if (containerTop > height) {
+      containerTop = height;
+    } else if (containerTop < 0) {
+      containerTop = 0;
+    }
+
+    const xLight = 2 - containerLeft / width;
+    const yLight = 100 - (containerTop / height) * 100;
+
+    if (containerLeft > width || containerLeft < 0) {
+      const pos = containerLeft < 0 ? -7.5 : width - 7.5;
+      setSatPosition({ x: pos, y: containerTop - 7.5 });
+      if (containerTop > height) {
+        setSatPosition({ x: pos, y: height - 7.5 });
+      } else if (containerTop + 7.5 < 0) {
+        setSatPosition({ x: pos, y: -7.5 });
+      }
+    } else if (containerTop > height || containerTop < 0) {
+      const pos = containerTop < 0 ? -7.5 : height - 7.5;
+      setSatPosition({ x: containerLeft - 7.5, y: pos });
+    } else {
+      setSatPosition({ x: containerLeft - 7.5, y: containerTop - 7.5 });
+    }
+    setLs((containerLeft / width) * 100, (yLight / 2) * xLight);
   };
 
   const handleModeChange = () => {

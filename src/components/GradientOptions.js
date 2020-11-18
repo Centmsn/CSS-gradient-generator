@@ -109,9 +109,10 @@ const Bar = styled.div.attrs((props) => ({
       right: 0;
       top: 120%;
 
+      border: 2px solid ${(props) => props.theme.darkGray};
       border-radius: 5px;
-      background-color: ${(props) => props.theme.darkBlue};
-      color: white;
+
+      color: gray;
       font-family: "Inconsolata", monospace;
       padding: 5px;
     }
