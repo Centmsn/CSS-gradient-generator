@@ -48,7 +48,7 @@ const GradientOptions = ({
       return { ...prev, [colorsAmount + 1]: { x: e.clientX - left - 10 } };
     });
     setActiveCol({ index: colorsAmount + 1, h: 0, s: 100, l: 50, a: 100 });
-    // *test
+    // TODO: replace with proper value
     setActiveWidth(1, colorsAmount + 1);
   };
 

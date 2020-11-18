@@ -57,7 +57,13 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
 
   return (
     <>
-      <Bar hue={hue} sat={sat} light={light} ref={transparencyBar}>
+      <Bar
+        hue={hue}
+        sat={sat}
+        light={light}
+        ref={transparencyBar}
+        onClick={setTransparency}
+      >
         <InnerBar />
         <Draggable func={setTransparency} left={sliderPosition} />
       </Bar>

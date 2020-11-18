@@ -69,10 +69,7 @@ const ColorsList = ({
 const List = styled.div`
   grid-area: 1/3/8/4;
 
-  border-radius: 5px;
-
-  background-color: ${(props) => props.theme.darkBlue};
-  color: white;
+  border-left: 2px solid ${(props) => props.theme.darkGray};
   font-family: ${(props) => props.theme.mainFont};
   overflow-y: auto;
 `;
@@ -110,14 +107,14 @@ const Btn = styled.button`
   border: none;
   outline: none;
   background: none;
-  color: white;
+  color: ${(props) => props.theme.darkBlue};
 
   font-size: 1.5rem;
   cursor: pointer;
   transition: 300ms;
 
   &:hover {
-    color: red;
+    color: ${(props) => props.theme.darkRed};
   }
 `;
 

@@ -62,12 +62,7 @@ const Options = ({
     }
   };
 
-  const setSaturation = () => {
-    document.addEventListener("mousemove", startSaturationSlide);
-    document.addEventListener("mouseup", stopSaturationSlide);
-  };
-
-  const startSaturationSlide = (e) => {
+  const setSatLight = (e) => {
     const {
       left,
       top,
@@ -100,9 +95,14 @@ const Options = ({
     }
   };
 
-  const stopSaturationSlide = () => {
-    document.removeEventListener("mousemove", startSaturationSlide);
-    document.removeEventListener("mouseup", stopSaturationSlide);
+  const startDrag = () => {
+    document.addEventListener("mousemove", setSatLight);
+    document.addEventListener("mouseup", stopDrag);
+  };
+
+  const stopDrag = () => {
+    document.removeEventListener("mousemove", setSatLight);
+    document.removeEventListener("mouseup", stopDrag);
   };
 
   return (
@@ -110,16 +110,16 @@ const Options = ({
       <Button onClick={handleModeChange}>
         Convert to {mode === "hsl" ? "RGB" : "HSL"}
       </Button>
-      <ColorPicker deg={hue} ref={colorSat}>
+      <ColorPicker deg={hue} ref={colorSat} onClick={setSatLight}>
         <ColorPickerSelector
-          onMouseDown={setSaturation}
+          onMouseDown={startDrag}
           ref={satSelector}
           left={satPosition.x}
           top={satPosition.y}
         />
         <BlackGradient />
       </ColorPicker>
-      <ColorHue ref={colorHue}>
+      <ColorHue ref={colorHue} onClick={setColor}>
         <Draggable left={hueOffset} func={setColor} />
       </ColorHue>
       <Wrapper>

@@ -52,7 +52,7 @@ const DegreeOptions = ({ setDeg, degrees }) => {
 
   return (
     <>
-      <Bar ref={degreeBar}>
+      <Bar ref={degreeBar} onClick={setGradientDegrees}>
         <Draggable left={leftOffset} func={setGradientDegrees} />
         <InnerBar ref={innerBar} offset={leftOffset + 12} />
       </Bar>
