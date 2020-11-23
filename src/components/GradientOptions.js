@@ -1,28 +1,33 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { useState, useRef, useEffect } from "react";
+import { useRef } from "react";
+import _ from "lodash";
 
-import { changeActiveCol, setActiveWidth, setActiveCol } from "../actions";
-import Draggable from "./Draggable";
-
-const GradientOptions = ({
-  active,
-  gradient,
+import {
   changeActiveCol,
   setActiveWidth,
   setActiveCol,
-  code,
-}) => {
-  const [colorsAmount, setColorsAmount] = useState(1);
-  const [colorsPosition, setColorsPosition] = useState({
-    0: { x: 20 },
-    1: { x: 70 },
-  });
-  const gradientBar = useRef(null);
+  reorderColors,
+  setColorWidth,
+} from "../actions";
+import Draggable from "./Draggable";
 
-  useEffect(() => {
-    setColorsAmount(Object.keys(gradient).length - 1);
-  }, [gradient]);
+const GradientOptions = (props) => {
+  const {
+    active,
+    gradient,
+    changeActiveCol,
+    setActiveWidth,
+    setActiveCol,
+    reorderColors,
+    code,
+    colorsWidth,
+    setColorWidth,
+  } = props;
+
+  const gradientBar = useRef(null);
+  const colorsAmount = Object.keys(gradient).length;
+  // !colors position doesnt change on color remove
 
   const changeColorPosition = (e, index) => {
     changeActiveCol(index);
@@ -32,30 +37,28 @@ const GradientOptions = ({
       return;
     }
 
-    setColorsPosition((prev) => ({
-      ...prev,
-      [index]: { x: e.clientX - left - 10 },
-    }));
     setActiveWidth(Math.round((e.clientX - left + 10) * (100 / width)), index);
+
+    reorderColors(colorsWidth, e.clientX - left - 10, index);
+    setColorWidth(e.clientX - left - 10, index);
   };
 
   const addGradientColor = (e) => {
     if (e.target !== gradientBar.current) return;
     const { left } = gradientBar.current.getBoundingClientRect();
 
-    setColorsAmount((prev) => prev + 1);
-    setColorsPosition((prev) => {
-      return { ...prev, [colorsAmount + 1]: { x: e.clientX - left - 10 } };
-    });
-    setActiveCol({ index: colorsAmount + 1, h: 0, s: 100, l: 50, a: 100 });
+    setColorWidth(e.clientX - left - 10, colorsAmount);
+    setActiveCol({ index: colorsAmount, h: 0, s: 100, l: 50, a: 100 });
+
     // TODO: replace with proper value
-    setActiveWidth(1, colorsAmount + 1);
+    reorderColors(colorsWidth, e.clientX - left - 10, colorsAmount);
+    setActiveWidth(1, colorsAmount);
   };
 
   const generateSliders = () => {
     const sliders = [];
 
-    for (let i = 0; i <= colorsAmount; i++) {
+    for (let i = 0; i <= colorsAmount - 1; i++) {
       if (i >= Object.keys(gradient).length) return;
 
       const sliderCol = `hsl(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%)`;
@@ -63,7 +66,7 @@ const GradientOptions = ({
       sliders.push(
         <Draggable
           key={i}
-          left={colorsPosition[i].x}
+          left={colorsWidth[i].x}
           func={(e) => changeColorPosition(e, i)}
           clickFunc={() => changeActiveCol(i)}
           active={i === active ? true : false}
@@ -127,6 +130,7 @@ const mapStateToProps = (state) => {
     active: colId,
     gradient,
     code,
+    colorsWidth: state.width,
   };
 };
 
@@ -134,4 +138,6 @@ export default connect(mapStateToProps, {
   changeActiveCol,
   setActiveWidth,
   setActiveCol,
+  reorderColors,
+  setColorWidth,
 })(GradientOptions);

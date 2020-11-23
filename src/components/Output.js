@@ -3,16 +3,9 @@ import { connect } from "react-redux";
 import { useEffect } from "react";
 import { setActiveCol } from "../actions";
 
-const Output = ({
-  hue,
-  sat,
-  light,
-  alpha,
-  deg,
-  setActiveCol,
-  active,
-  code,
-}) => {
+const Output = (props) => {
+  const { hue, sat, light, alpha, deg, setActiveCol, active, code } = props;
+
   useEffect(() => {
     setActiveCol({ index: active, h: hue, s: sat, l: light, a: alpha });
   }, [hue, sat, light, alpha, deg]);

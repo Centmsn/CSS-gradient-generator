@@ -4,13 +4,18 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
-import { removeGradientCol, changeActiveCol } from "../actions";
+import {
+  removeGradientCol,
+  changeActiveCol,
+  unsetColorWidth,
+} from "../actions";
 
 const ColorsList = ({
   gradient,
   index,
   removeGradientCol,
   changeActiveCol,
+  unsetColorWidth,
 }) => {
   const [displayTooltip, setDisplayTooltip] = useState(false);
 
@@ -22,6 +27,7 @@ const ColorsList = ({
       return;
     }
 
+    unsetColorWidth(index);
     removeGradientCol(index);
   };
 
@@ -125,6 +131,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { removeGradientCol, changeActiveCol })(
-  ColorsList
-);
+export default connect(mapStateToProps, {
+  removeGradientCol,
+  changeActiveCol,
+  unsetColorWidth,
+})(ColorsList);

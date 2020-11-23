@@ -23,7 +23,6 @@ const Options = ({
   const colorSat = useRef(null);
   const satSelector = useRef(null);
 
-  const [colorInputs, setColorInputs] = useState({});
   const [hueOffset, setHueOffset] = useState(null);
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
 

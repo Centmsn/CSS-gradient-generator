@@ -6,30 +6,29 @@ import { convertHslToRgb } from "../helpers";
 import { setGradientCode } from "../actions";
 import transparentBg from "../assets/paven.png";
 
-const DisplayColor = ({ deg, gradient, code, setGradientCode, mode }) => {
+const DisplayColor = (props) => {
+  const { deg, gradient, code, output, order, setGradientCode } = props;
+
   useEffect(() => {
     const length = Object.keys(gradient).length;
-    const output = [];
+    const result = [];
 
+    // !gradient updates first and has more keys than order
     for (let i = 0; i < length; i++) {
-      if (mode === "hsl") {
-        output.push(
-          `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%) ${gradient[i].w}%`
-        );
-      } else if (mode === "rgb") {
-        output.push(
-          `${convertHslToRgb(
-            gradient[i].h,
-            gradient[i].s,
-            gradient[i].l,
-            gradient[i].a
-          )} ${gradient[i].w}%`
-        );
+      if (!gradient[order[i]]) {
+        return;
+      }
+      const { h, s, l, a, w } = gradient[order[i]];
+
+      if (output === "hsl") {
+        result.push(`hsla(${h}, ${s}%, ${l}%, ${a}%) ${w}%`);
+      } else if (output === "rgb") {
+        result.push(`${convertHslToRgb(h, s, l, a)} ${w}%`);
       }
     }
 
-    setGradientCode(`linear-gradient(${deg}deg, ${output.join(", ")})`);
-  }, [gradient, deg, setGradientCode, mode]);
+    setGradientCode(`linear-gradient(${deg}deg, ${result.join(", ")})`);
+  }, [gradient, deg, setGradientCode, output, order]);
 
   return (
     <ColorOutput code={code}>
@@ -65,11 +64,14 @@ const InnerBg = styled.div`
 `;
 
 const mapStateToProps = (state) => {
+  const { deg, gradient, code, output, order } = state;
+
   return {
-    deg: state.deg,
-    gradient: state.gradient,
-    code: state.code,
-    mode: state.output,
+    deg,
+    gradient,
+    code,
+    output,
+    order,
   };
 };
 

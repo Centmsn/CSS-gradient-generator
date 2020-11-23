@@ -8,6 +8,9 @@ import {
   SETACTIVEWIDTH,
   SETGRADIENTCODE,
   REMOVEGRADIENTCOL,
+  SWITCHORDER,
+  SETCOLORWIDTH,
+  UNSETCOLORWIDTH,
   RGB,
   HSL,
 } from "./types";
@@ -87,5 +90,31 @@ export const switchToRgb = () => {
 export const switchToHsl = () => {
   return {
     type: HSL,
+  };
+};
+
+export const reorderColors = (object, current, index) => {
+  const keys = Object.keys(object);
+  object[index].x = current;
+
+  keys.sort((a, b) => (object[a].x > object[b].x ? 1 : -1));
+
+  return {
+    type: SWITCHORDER,
+    payload: keys,
+  };
+};
+
+export const setColorWidth = (width, index) => {
+  return {
+    type: SETCOLORWIDTH,
+    payload: { width, index },
+  };
+};
+
+export const unsetColorWidth = (index) => {
+  return {
+    type: UNSETCOLORWIDTH,
+    payload: index,
   };
 };
