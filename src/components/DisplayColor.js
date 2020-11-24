@@ -10,14 +10,14 @@ const DisplayColor = (props) => {
   const { deg, gradient, code, output, order, setGradientCode } = props;
 
   useEffect(() => {
-    const length = Object.keys(gradient).length;
+    const length = Object.keys(order).length;
     const result = [];
 
-    // !gradient updates first and has more keys than order
     for (let i = 0; i < length; i++) {
       if (!gradient[order[i]]) {
-        return;
+        continue;
       }
+
       const { h, s, l, a, w } = gradient[order[i]];
 
       if (output === "hsl") {
@@ -47,8 +47,6 @@ const ColorOutput = styled.div.attrs((props) => ({
   left: 0;
   width: 100%;
   height: 35%;
-
-  background-color: ${(props) => props.background};
 `;
 
 const InnerBg = styled.div`

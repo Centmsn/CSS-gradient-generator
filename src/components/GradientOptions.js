@@ -51,7 +51,7 @@ const GradientOptions = (props) => {
     setActiveCol({ index: colorsAmount, h: 0, s: 100, l: 50, a: 100 });
 
     // TODO: replace with proper value
-    reorderColors(colorsWidth, e.clientX - left - 10, colorsAmount);
+    // TODO: adding color doesnt reorder colors
     setActiveWidth(1, colorsAmount);
   };
 

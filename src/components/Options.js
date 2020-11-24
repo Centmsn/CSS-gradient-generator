@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { setH, setLs, switchToHsl, switchToRgb } from "../actions";
+import { convertHslToRgb } from "../helpers";
 import Draggable from "./Draggable";
 import DegreeOptions from "./DegreeOptions";
 import GradientOptions from "./GradientOptions";
@@ -45,6 +46,37 @@ const Options = ({
         7.5,
     });
   }, [active]);
+
+  const getColorCode = (char) => {
+    if (!gradient[active]) return;
+    const { h, s, l } = gradient[active];
+
+    if (mode === "hsl") {
+      switch (char) {
+        case "h":
+          return h;
+
+        case "s":
+          return s;
+
+        case "l":
+          return l;
+      }
+    } else {
+      const { r, g, b } = convertHslToRgb(h, s, l, 0, true);
+
+      switch (char) {
+        case "h":
+          return r;
+
+        case "s":
+          return g;
+
+        case "l":
+          return b;
+      }
+    }
+  };
 
   const setColor = (e) => {
     const { left, width } = colorHue.current.getBoundingClientRect();
@@ -142,17 +174,17 @@ const Options = ({
       <Wrapper>
         <Label>
           {mode === "hsl" ? "H" : "R"}
-          <Input />
+          <Input value={getColorCode("h")} />
         </Label>
 
         <Label>
           {mode === "hsl" ? "S" : "G"}
-          <Input />
+          <Input value={getColorCode("s")} />
         </Label>
 
         <Label>
           {mode === "hsl" ? "L" : "B"}
-          <Input />
+          <Input value={getColorCode("l")} />
         </Label>
       </Wrapper>
       <TransparentOptions />
