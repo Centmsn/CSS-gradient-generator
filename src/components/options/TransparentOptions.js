@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 
 import Draggable from "./Draggable";
-import { setA } from "../actions";
+import { setA } from "../../actions";
 
-import transparentBg from "../assets/paven.png";
+import transparentBg from "../../assets/paven.png";
 
 const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
   const [displayTooltip, setDisplayTooltip] = useState(false);

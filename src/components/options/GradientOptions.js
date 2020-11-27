@@ -9,7 +9,7 @@ import {
   setActiveCol,
   reorderColors,
   setColorWidth,
-} from "../actions";
+} from "../../actions";
 import Draggable from "./Draggable";
 
 const GradientOptions = (props) => {

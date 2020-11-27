@@ -2,16 +2,14 @@ import styled from "styled-components";
 import { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { setH, setLs, switchToHsl, switchToRgb } from "../actions";
-import { convertHslToRgb } from "../helpers";
-import Draggable from "./Draggable";
+import { setLs, switchToHsl, switchToRgb } from "../../actions";
 import DegreeOptions from "./DegreeOptions";
 import GradientOptions from "./GradientOptions";
 import ColorsList from "./ColorsList";
+import ColorHue from "./ColorHue";
 import TransparentOptions from "./TransparentOptions";
 
 const Options = ({
-  setH,
   setLs,
   hue,
   active,
@@ -20,77 +18,28 @@ const Options = ({
   switchToHsl,
   switchToRgb,
 }) => {
-  const colorHue = useRef(null);
   const colorSat = useRef(null);
   const satSelector = useRef(null);
 
-  const [hueOffset, setHueOffset] = useState(null);
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const { width } = colorHue.current.getBoundingClientRect();
-    const satDimensions = colorSat.current.getBoundingClientRect();
-
-    setH(gradient[active].h);
-    setLs(gradient[active].s, gradient[active].l);
-
-    setHueOffset((width / 360) * gradient[active].h);
-
-    setSatPosition({
-      x: (satDimensions.width / 100) * gradient[active].s - 7.5,
-      y:
-        satDimensions.height -
-        (satDimensions.height / 100) *
-          gradient[active].l *
-          (1 + gradient[active].s / 100) -
-        7.5,
-    });
+    setColorPickerPosition();
   }, [active]);
 
-  const getColorCode = (char) => {
-    if (!gradient[active]) return;
-    const { h, s, l } = gradient[active];
+  const setColorPickerPosition = (
+    s = gradient[active].s,
+    l = gradient[active].l
+  ) => {
+    const satDimensions = colorSat.current.getBoundingClientRect();
 
-    if (mode === "hsl") {
-      switch (char) {
-        case "h":
-          return h;
-
-        case "s":
-          return s;
-
-        case "l":
-          return l;
-      }
-    } else {
-      const { r, g, b } = convertHslToRgb(h, s, l, 0, true);
-
-      switch (char) {
-        case "h":
-          return r;
-
-        case "s":
-          return g;
-
-        case "l":
-          return b;
-      }
-    }
-  };
-
-  const setColor = (e) => {
-    const { left, width } = colorHue.current.getBoundingClientRect();
-
-    if (e.clientX - left > width) {
-      setHueOffset(width - 6);
-      setH(360);
-    } else if (e.clientX - left < 0) {
-      setHueOffset(-6);
-      setH(0);
-    } else {
-      setHueOffset(e.clientX - left - 6.5);
-      setH((e.clientX - left) * (360 / width));
-    }
+    setSatPosition({
+      x: (satDimensions.width / 100) * s - 7.5,
+      y:
+        satDimensions.height -
+        (satDimensions.height / 100) * l * (1 + s / 100) -
+        7.5,
+    });
   };
 
   const setSatLight = (e) => {
@@ -168,25 +117,7 @@ const Options = ({
         />
         <BlackGradient />
       </ColorPicker>
-      <ColorHue ref={colorHue} onClick={setColor}>
-        <Draggable left={hueOffset} func={setColor} />
-      </ColorHue>
-      <Wrapper>
-        <Label>
-          {mode === "hsl" ? "H" : "R"}
-          <Input value={getColorCode("h")} />
-        </Label>
-
-        <Label>
-          {mode === "hsl" ? "S" : "G"}
-          <Input value={getColorCode("s")} />
-        </Label>
-
-        <Label>
-          {mode === "hsl" ? "L" : "B"}
-          <Input value={getColorCode("l")} />
-        </Label>
-      </Wrapper>
+      <ColorHue setPosition={setColorPickerPosition} />
       <TransparentOptions />
       <DegreeOptions />
       <GradientOptions />
@@ -262,23 +193,6 @@ const BlackGradient = styled.div`
   );
 `;
 
-const ColorHue = styled.div`
-  position: relative;
-  grid-area: 2/2/3/3;
-
-  background: linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 1) 1%,
-    rgba(255, 252, 0, 1) 20%,
-    rgba(0, 255, 7, 1) 30%,
-    rgba(0, 254, 255, 1) 50%,
-    rgba(0, 31, 255, 1) 60%,
-    rgba(252, 0, 255, 1) 85%,
-    rgba(255, 0, 0, 1) 95%
-  );
-  border-radius: 5px;
-`;
-
 const ColorPickerSelector = styled.div.attrs((props) => ({
   style: {
     left: props.left,
@@ -297,40 +211,6 @@ const ColorPickerSelector = styled.div.attrs((props) => ({
   cursor: pointer;
 `;
 
-const Input = styled.input.attrs(() => ({
-  type: "number",
-  min: 0,
-  max: 255,
-}))`
-  width: 75%;
-
-  font-family: ${(props) => props.theme.mainFont};
-
-  border: 2px solid ${(props) => props.theme.darkGray};
-  border-radius: 5px;
-  outline: none;
-  padding: 3px;
-
-  -moz-appearance: textfield;
-
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-`;
-
-const Wrapper = styled.div`
-  grid-area: 3/2/4/3;
-
-  display: flex;
-`;
-
-const Label = styled.label`
-  color: gray;
-  font-family: ${(props) => props.theme.mainFont};
-  user-select: none;
-`;
-
 const mapStateToProps = (state) => {
   return {
     hue: state.colorPicked.hue,
@@ -341,7 +221,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  setH,
   setLs,
   switchToRgb,
   switchToHsl,

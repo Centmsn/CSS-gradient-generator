@@ -8,7 +8,7 @@ import {
   removeGradientCol,
   changeActiveCol,
   unsetColorWidth,
-} from "../actions";
+} from "../../actions";
 
 const ColorsList = ({
   gradient,

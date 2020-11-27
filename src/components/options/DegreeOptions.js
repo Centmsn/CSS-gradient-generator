@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useState, useRef } from "react";
 
 import Draggable from "./Draggable";
-import { setDeg } from "../actions";
+import { setDeg } from "../../actions";
 
 const DegreeOptions = ({ setDeg, degrees }) => {
   const [leftOffset, setLeftOffset] = useState(90);

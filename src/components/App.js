@@ -1,7 +1,7 @@
 import styled, { createGlobalStyle } from "styled-components";
 
 import DisplayColor from "./DisplayColor";
-import Options from "./Options";
+import Options from "./options/Options";
 import Output from "./Output";
 import Theme from "../context/Theme";
 
