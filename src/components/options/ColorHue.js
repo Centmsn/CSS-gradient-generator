@@ -6,7 +6,7 @@ import { convertHslToRgb } from "../../helpers";
 import Draggable from "./Draggable";
 import { setH, setLs } from "../../actions";
 
-const ColorHue = ({ setH, setLs, setPosition, gradient, active, mode }) => {
+const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
   console.log({ mode });
   const [hueOffset, setHueOffset] = useState(null);
   const hue = useRef(null);
@@ -80,12 +80,10 @@ const ColorHue = ({ setH, setLs, setPosition, gradient, active, mode }) => {
 
         case "l":
           setLs(s, e.target.value);
-          setPosition(s, e.target.value);
           break;
 
         case "s":
           setLs(e.target.value, l);
-          setPosition(e.target.value, l);
           break;
       }
     }
