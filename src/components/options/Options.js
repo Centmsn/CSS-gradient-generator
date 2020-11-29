@@ -18,11 +18,11 @@ const Options = ({ mode, switchToHsl, switchToRgb }) => {
     }
   };
 
+  const btnText = `Convert to ${mode === "hsl" ? "RGB" : "HSL"}`;
+
   return (
     <Settings>
-      <Button onClick={handleModeChange}>
-        Convert to {mode === "hsl" ? "RGB" : "HSL"}
-      </Button>
+      <Button onClick={handleModeChange}>{btnText}</Button>
       <LSOptions />
       <ColorHue />
       <TransparentOptions />

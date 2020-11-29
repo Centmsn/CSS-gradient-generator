@@ -2,13 +2,13 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 
-import { convertHslToRgb } from "../../helpers";
+import { convertHslToRgb, convertRgbToHsl } from "../../helpers";
 import Draggable from "./Draggable";
 import { setH, setLs } from "../../actions";
 
 const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
-  console.log({ mode });
   const [hueOffset, setHueOffset] = useState(null);
+  const [rgbColor, setRgbColor] = useState({});
   const hue = useRef(null);
 
   useEffect(() => {
@@ -19,6 +19,14 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
 
     setHueOffset((width / 360) * gradient[active].h);
   }, [active]);
+
+  useEffect(() => {
+    const { h, s, l } = gradient[active];
+    const { r, g, b } = convertHslToRgb(h, s, l, 0, true);
+
+    setRgbColor({ r, g, b });
+    // !gradient genrates problems but allows to update colors
+  }, [mode, active]);
 
   const setColor = (e) => {
     const { left, width } = hue.current.getBoundingClientRect();
@@ -35,87 +43,100 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
     }
   };
 
-  const getColorCode = (char) => {
-    if (!gradient[active]) return;
-    const { h, s, l } = gradient[active];
+  const setColorValue = (e, char) => {
+    // !triple color conversion
 
-    if (mode === "hsl") {
-      switch (char) {
-        case "h":
-          return h;
-
-        case "s":
-          return s;
-
-        case "l":
-          return l;
-      }
-    } else {
-      const { r, g, b } = convertHslToRgb(h, s, l, 0, true);
-
-      switch (char) {
-        case "h":
-          return r;
-
-        case "s":
-          return g;
-
-        case "l":
-          return b;
-      }
-    }
-  };
-
-  const manualColorChange = (e, char) => {
-    // !works for hsl not for rgb
-    // !if sat > 50 && l > 50 refactor required
-    // !refactor required
-
-    const { s, l } = gradient[active];
     if (mode === "hsl") {
       switch (char) {
         case "h":
           setH(e.target.value);
           break;
 
+        case "s":
+          setLs(e.target.value, gradient[active].l);
+          break;
+
         case "l":
-          setLs(s, e.target.value);
+          setLs(gradient[active].s, e.target.value);
+          break;
+      }
+    } else {
+      let rgbChar, currentHsl;
+      const value = parseInt(e.target.value);
+
+      switch (char) {
+        case "h":
+          rgbChar = "r";
+          currentHsl = convertRgbToHsl(value, rgbColor.g, rgbColor.b, true);
           break;
 
         case "s":
-          setLs(e.target.value, l);
+          rgbChar = "g";
+          currentHsl = convertRgbToHsl(rgbColor.r, value, rgbColor.b, true);
           break;
+
+        case "l":
+          rgbChar = "b";
+          currentHsl = convertRgbToHsl(rgbColor.r, rgbColor.g, value, true);
+          break;
+      }
+      setRgbColor((prev) => ({ ...prev, [rgbChar]: value }));
+
+      setH(Math.round(currentHsl.h));
+      setLs(Math.round(currentHsl.s), Math.round(currentHsl.l));
+    }
+  };
+
+  const getColorValue = (char) => {
+    if (!gradient[active]) return;
+
+    if (mode === "hsl") {
+      return gradient[active][char];
+    } else {
+      const { r, g, b } = rgbColor;
+
+      switch (char) {
+        case "h":
+          return r;
+        case "s":
+          return g;
+        case "l":
+          return b;
       }
     }
   };
 
+  const descHR = mode === "hsl" ? "H" : "R";
+  const descSG = mode === "hsl" ? "S" : "G";
+  const descLB = mode === "hsl" ? "L" : "B";
+
   return (
     <>
-      <Bar ref={hue}>
+      <Bar ref={hue} onClick={setColor}>
         <Draggable left={hueOffset} func={setColor} />
       </Bar>
       <Wrapper>
         <Label>
-          {mode === "hsl" ? "H" : "R"}
+          {descHR}
           <Input
-            value={getColorCode("h")}
-            onChange={(e) => manualColorChange(e, "h")}
+            value={getColorValue("h")}
+            onChange={(e) => setColorValue(e, "h")}
           />
         </Label>
 
         <Label>
-          {mode === "hsl" ? "S" : "G"}
+          {descSG}
           <Input
-            value={getColorCode("s")}
-            onChange={(e) => manualColorChange(e, "s")}
+            value={getColorValue("s")}
+            onChange={(e) => setColorValue(e, "s")}
           />
         </Label>
 
         <Label>
-          {mode === "hsl" ? "L" : "B"}
+          {descLB}
           <Input
-            value={getColorCode("l")}
-            onChange={(e) => manualColorChange(e, "l")}
+            value={getColorValue("l")}
+            onChange={(e) => setColorValue(e, "l")}
           />
         </Label>
       </Wrapper>

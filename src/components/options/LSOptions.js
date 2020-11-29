@@ -6,12 +6,17 @@ import { setLs } from "../../actions";
 
 const LSOptions = ({ active, setLs, gradient, hue }) => {
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
+  const [colorPickerFlag, setColorPickerFlag] = useState(true);
   const colorSat = useRef(null);
   const satSelector = useRef(null);
 
   useEffect(() => {
-    setColorPickerPosition();
-  }, [active]);
+    // !position set incorrectly for rgb
+    // !slightly incorrect for hsl
+    if (colorPickerFlag) {
+      setColorPickerPosition();
+    }
+  }, [active, gradient]);
 
   const setColorPickerPosition = (
     s = gradient[active].s,
@@ -73,11 +78,13 @@ const LSOptions = ({ active, setLs, gradient, hue }) => {
   };
 
   const startDrag = () => {
+    setColorPickerFlag(false);
     document.addEventListener("mousemove", setSatLight);
     document.addEventListener("mouseup", stopDrag);
   };
 
   const stopDrag = () => {
+    setColorPickerFlag(true);
     document.removeEventListener("mousemove", setSatLight);
     document.removeEventListener("mouseup", stopDrag);
   };

@@ -45,7 +45,7 @@ export const convertHslToRgb = (h, s, l, a = 0, object = false) => {
   return `rgba(${r}, ${g}, ${b}, ${a / 100})`;
 };
 
-export const convertRgbToHsl = (r, g, b) => {
+export const convertRgbToHsl = (r, g, b, object = false) => {
   r /= 255;
   g /= 255;
   b /= 255;
@@ -72,6 +72,14 @@ export const convertRgbToHsl = (r, g, b) => {
 
   s = +(s * 100).toFixed(1);
   l = +(l * 100).toFixed(1);
+
+  if (object) {
+    return {
+      h,
+      s,
+      l,
+    };
+  }
 
   return "hsl(" + h + "," + s + "%," + l + "%)";
 };

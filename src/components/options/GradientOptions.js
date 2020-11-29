@@ -83,8 +83,7 @@ const GradientOptions = (props) => {
     <Bar
       onMouseDown={addGradientColor}
       ref={gradientBar}
-      //  gradient bar always keeps 90deg
-      // to represent colors placement
+      //  gradient bar always keeps 90deg to represent colors placement
       color={code.replace(/\d{1,3}deg/gi, "90deg")}
     >
       {generateSliders()}
