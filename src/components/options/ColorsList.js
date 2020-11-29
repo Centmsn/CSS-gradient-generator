@@ -13,10 +13,10 @@ import {
 const ColorsList = ({
   gradient,
   index,
+  order,
   removeGradientCol,
   changeActiveCol,
   unsetColorWidth,
-  order,
 }) => {
   const [displayTooltip, setDisplayTooltip] = useState(false);
 
@@ -38,29 +38,37 @@ const ColorsList = ({
 
   const renderList = () => {
     const length = Object.keys(gradient).length;
+    const colOrder = [...order];
     const list = [];
+    const sortedList = [];
 
+    // TODO: add list number
+    // ! refactor required
     for (let i = 0; i < length; i++) {
-      if (!gradient[order[i]]) continue;
-      const color = `hsla(${gradient[order[i]].h}, ${gradient[order[i]].s}%, ${
-        gradient[order[i]].l
-      }%, ${gradient[order[i]].a}%)`;
+      const color = `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%)`;
       const active = i === index ? true : false;
-      list.push(
-        <ListEl key={i}>
-          <ListColor
-            color={color}
-            active={active}
-            onClick={() => changeActive(i)}
-          />
-          <Btn onClick={() => removeColor(i)}>
-            <FontAwesomeIcon icon={faTrashAlt} />
-          </Btn>
-        </ListEl>
-      );
+      list.push({
+        id: i,
+        listItem: [
+          <ListEl key={i}>
+            <ListColor
+              color={color}
+              active={active}
+              onClick={() => changeActive(i)}
+            />
+            <Btn onClick={() => removeColor(i)}>
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </Btn>
+          </ListEl>,
+        ],
+      });
     }
 
-    return list;
+    while (colOrder.length > 0) {
+      sortedList.push(list[colOrder.shift()].listItem);
+    }
+
+    return sortedList;
   };
 
   const tooltip = displayTooltip ? (
@@ -94,6 +102,8 @@ const ListEl = styled.li`
 
   display: flex;
   justify-content: space-around;
+
+  color: gray;
 `;
 
 const ListColor = styled.div`
@@ -129,10 +139,12 @@ const Btn = styled.button`
 `;
 
 const mapStateToProps = (state) => {
+  const { gradient, order } = state;
+
   return {
     index: state.colId,
-    gradient: state.gradient,
-    order: state.order,
+    gradient,
+    order,
   };
 };
 
