@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import _ from "lodash";
 
 import {
@@ -28,6 +28,11 @@ const GradientOptions = (props) => {
   const gradientBar = useRef(null);
   const colorsAmount = Object.keys(gradient).length;
   // !colors position doesnt change on color remove
+
+  useEffect(() => {
+    const index = Object.keys(colorsWidth).length - 1;
+    reorderColors(colorsWidth, colorsWidth[index].x, index);
+  }, [colorsWidth]);
 
   const changeColorPosition = (e, index) => {
     changeActiveCol(index);

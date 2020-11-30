@@ -2,9 +2,9 @@ import { connect } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-import { setLs } from "../../actions";
+import { setLs, changeActiveCol } from "../../actions";
 
-const LSOptions = ({ active, setLs, gradient, hue }) => {
+const LSOptions = ({ active, setLs, changeActiveCol, gradient, hue }) => {
   const [satPosition, setSatPosition] = useState({ x: 0, y: 0 });
   const [colorPickerFlag, setColorPickerFlag] = useState(true);
   const colorSat = useRef(null);
@@ -14,6 +14,14 @@ const LSOptions = ({ active, setLs, gradient, hue }) => {
     // !position set incorrectly for rgb
     // !slightly incorrect for hsl
     if (colorPickerFlag) {
+      // if active color was removed
+      // set active to first color
+      if (!gradient[active]) {
+        changeActiveCol(0);
+        setColorPickerPosition(gradient[0].s, gradient[0].l);
+
+        return;
+      }
       setColorPickerPosition();
     }
   }, [active, gradient]);
@@ -151,11 +159,12 @@ const ColorPickerSelector = styled.div.attrs((props) => ({
 `;
 
 const mapStateToProps = (state) => {
+  const { colId, gradient } = state;
   return {
-    active: state.colId,
-    gradient: state.gradient,
+    gradient,
+    active: colId,
     hue: state.colorPicked.hue,
   };
 };
 
-export default connect(mapStateToProps, { setLs })(LSOptions);
+export default connect(mapStateToProps, { setLs, changeActiveCol })(LSOptions);

@@ -5,10 +5,12 @@ import { useState, useRef, useEffect } from "react";
 import { convertHslToRgb, convertRgbToHsl } from "../../helpers";
 import Draggable from "./Draggable";
 import { setH, setLs } from "../../actions";
+import Tooltip from "./Tooltip";
 
 const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
   const [hueOffset, setHueOffset] = useState(null);
   const [rgbColor, setRgbColor] = useState({});
+  const [tooltipText, setTooltipText] = useState("");
   const hue = useRef(null);
 
   useEffect(() => {
@@ -45,46 +47,64 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
 
   const setColorValue = (e, char) => {
     // !triple color conversion
+    let val = parseInt(e.target.value);
+
+    if ((val > 360 || val < 0) && char === "h") {
+      val = 360;
+      setTooltipText("Range is 0-360");
+    } else if ((val > 100 || val < 0) && char !== "h") {
+      val = 100;
+      setTooltipText("Range is 0-100");
+    }
 
     if (mode === "hsl") {
       switch (char) {
         case "h":
-          setH(e.target.value);
+          setH(val);
           break;
 
         case "s":
-          setLs(e.target.value, gradient[active].l);
+          setLs(val, gradient[active].l);
           break;
 
         case "l":
-          setLs(gradient[active].s, e.target.value);
+          setLs(gradient[active].s, val);
           break;
       }
     } else {
       let rgbChar, currentHsl;
-      const value = parseInt(e.target.value);
+      if (val > 255 || val < 0) {
+        val = 255;
+
+        setTooltipText("Range is 0-255");
+      }
 
       switch (char) {
         case "h":
           rgbChar = "r";
-          currentHsl = convertRgbToHsl(value, rgbColor.g, rgbColor.b, true);
+          currentHsl = convertRgbToHsl(val, rgbColor.g, rgbColor.b, true);
           break;
 
         case "s":
           rgbChar = "g";
-          currentHsl = convertRgbToHsl(rgbColor.r, value, rgbColor.b, true);
+          currentHsl = convertRgbToHsl(rgbColor.r, val, rgbColor.b, true);
           break;
 
         case "l":
           rgbChar = "b";
-          currentHsl = convertRgbToHsl(rgbColor.r, rgbColor.g, value, true);
+          currentHsl = convertRgbToHsl(rgbColor.r, rgbColor.g, val, true);
           break;
       }
-      setRgbColor((prev) => ({ ...prev, [rgbChar]: value }));
+      setRgbColor((prev) => ({ ...prev, [rgbChar]: val }));
 
       setH(Math.round(currentHsl.h));
       setLs(Math.round(currentHsl.s), Math.round(currentHsl.l));
     }
+
+    setTimeout(() => {
+      if (tooltipText) return;
+      setTooltipText("");
+    }, 3000);
   };
 
   const getColorValue = (char) => {
@@ -109,6 +129,8 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
   const descHR = mode === "hsl" ? "H" : "R";
   const descSG = mode === "hsl" ? "S" : "G";
   const descLB = mode === "hsl" ? "L" : "B";
+
+  const rangeTooltip = tooltipText ? <Tooltip text={tooltipText} /> : null;
 
   return (
     <>
@@ -139,6 +161,8 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
             onChange={(e) => setColorValue(e, "l")}
           />
         </Label>
+
+        {rangeTooltip}
       </Wrapper>
     </>
   );
@@ -184,6 +208,7 @@ const Input = styled.input.attrs(() => ({
 `;
 
 const Wrapper = styled.div`
+  position: relative;
   grid-area: 3/2/4/3;
 
   display: flex;

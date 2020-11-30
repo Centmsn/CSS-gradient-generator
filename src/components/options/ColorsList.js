@@ -44,6 +44,7 @@ const ColorsList = ({
 
     // TODO: add list number
     // ! refactor required
+
     for (let i = 0; i < length; i++) {
       const color = `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%)`;
       const active = i === index ? true : false;
@@ -65,7 +66,9 @@ const ColorsList = ({
     }
 
     while (colOrder.length > 0) {
-      sortedList.push(list[colOrder.shift()].listItem);
+      const color = colOrder.shift();
+      if (!list[color]) continue;
+      sortedList.push(list[color].listItem);
     }
 
     return sortedList;

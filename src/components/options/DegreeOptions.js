@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 
 import Draggable from "./Draggable";
 import { setDeg } from "../../actions";
+import Tooltip from "./Tooltip";
 
 const DegreeOptions = ({ setDeg, degrees }) => {
   const [leftOffset, setLeftOffset] = useState(90);
@@ -32,11 +33,9 @@ const DegreeOptions = ({ setDeg, degrees }) => {
     const { width } = degreeBar.current.getBoundingClientRect();
 
     if (e.target.value > 360 || e.target.value < 0) {
-      setDeg(0);
-      setLeftOffset(-6);
-
+      setDeg(360);
+      setLeftOffset(width - 6.5);
       setDisplayTooltip(true);
-
       setTimeout(() => setDisplayTooltip(false), 3000);
     } else {
       setDeg(e.target.value);
@@ -44,11 +43,7 @@ const DegreeOptions = ({ setDeg, degrees }) => {
     }
   };
 
-  const tooltip = displayTooltip ? (
-    <Tooltip>
-      Range is 0-360<sup>o</sup>
-    </Tooltip>
-  ) : null;
+  const tooltip = displayTooltip ? <Tooltip text="Range is 0-360" /> : null;
 
   return (
     <>
@@ -126,15 +121,6 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-`;
-
-const Tooltip = styled.div`
-  position: absolute;
-
-  top: 0;
-  right: 0;
-
-  color: gray;
 `;
 
 const mapStateToProps = (state) => {

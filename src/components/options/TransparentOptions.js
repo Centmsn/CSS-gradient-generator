@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 
 import Draggable from "./Draggable";
 import { setA } from "../../actions";
+import Tooltip from "./Tooltip";
 
 import transparentBg from "../../assets/paven.png";
 
@@ -25,7 +26,7 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
     const { width } = transparencyBar.current.getBoundingClientRect();
 
     if (e.target.value > 100 || e.target.value < 0) {
-      e.target.value = 0;
+      e.target.value = 100;
 
       setDisplayTooltip(true);
 
@@ -53,7 +54,7 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
     }
   };
 
-  const tooltip = displayTooltip ? <Tooltip>Range is 0-100</Tooltip> : null;
+  const tooltip = displayTooltip ? <Tooltip text="Range is 0-100" /> : null;
 
   return (
     <>
@@ -135,14 +136,6 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-`;
-
-const Tooltip = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  color: gray;
 `;
 
 const mapStateToProps = (state) => {
