@@ -19,6 +19,8 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
     setH(gradient[active].h);
     setLs(gradient[active].s, gradient[active].l);
 
+    console.log(gradient[active].h);
+
     setHueOffset((width / 360) * gradient[active].h);
   }, [active]);
 
@@ -49,15 +51,15 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
     // !triple color conversion
     let val = parseInt(e.target.value);
 
-    if ((val > 360 || val < 0) && char === "h") {
-      val = 360;
-      setTooltipText("Range is 0-360");
-    } else if ((val > 100 || val < 0) && char !== "h") {
-      val = 100;
-      setTooltipText("Range is 0-100");
-    }
-
     if (mode === "hsl") {
+      if ((val > 360 || val < 0) && char === "h") {
+        val = 360;
+        setTooltipText("Range is 0-360");
+      } else if ((val > 100 || val < 0) && char !== "h") {
+        val = 100;
+        setTooltipText("Range is 0-100");
+      }
+
       switch (char) {
         case "h":
           setH(val);
@@ -143,6 +145,7 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
           <Input
             value={getColorValue("h")}
             onChange={(e) => setColorValue(e, "h")}
+            error={rangeTooltip}
           />
         </Label>
 
@@ -151,6 +154,7 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
           <Input
             value={getColorValue("s")}
             onChange={(e) => setColorValue(e, "s")}
+            error={rangeTooltip}
           />
         </Label>
 
@@ -159,6 +163,7 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
           <Input
             value={getColorValue("l")}
             onChange={(e) => setColorValue(e, "l")}
+            error={rangeTooltip}
           />
         </Label>
 
@@ -194,7 +199,8 @@ const Input = styled.input.attrs(() => ({
 
   font-family: ${(props) => props.theme.mainFont};
 
-  border: 2px solid ${(props) => props.theme.darkGray};
+  border: 2px solid
+    ${(props) => (props.error ? props.theme.darkRed : props.theme.darkGray)};
   border-radius: 5px;
   outline: none;
   padding: 3px;

@@ -29,11 +29,12 @@ export const convertHslToRgb = (h, s, l, a = 0, object = false) => {
     r = x;
     g = 0;
     b = c;
-  } else if (300 <= h && h < 360) {
+  } else if (300 <= h && h <= 360) {
     r = c;
     g = 0;
     b = x;
   }
+
   r = Math.round((r + m) * 255);
   g = Math.round((g + m) * 255);
   b = Math.round((b + m) * 255);
