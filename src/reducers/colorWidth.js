@@ -2,8 +2,8 @@ import _ from "lodash";
 import { SETCOLORWIDTH, UNSETCOLORWIDTH } from "../actions/types";
 
 const INITIAL_STATE = {
-  0: { x: 20 },
-  1: { x: 70 },
+  0: { x: 0 },
+  1: { x: 0 },
 };
 
 export default (state = INITIAL_STATE, action) => {

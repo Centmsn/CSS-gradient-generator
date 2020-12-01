@@ -19,8 +19,6 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
     setH(gradient[active].h);
     setLs(gradient[active].s, gradient[active].l);
 
-    console.log(gradient[active].h);
-
     setHueOffset((width / 360) * gradient[active].h);
   }, [active]);
 
@@ -48,7 +46,6 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
   };
 
   const setColorValue = (e, char) => {
-    // !triple color conversion
     let val = parseInt(e.target.value);
 
     if (mode === "hsl") {
@@ -103,10 +100,12 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
       setLs(Math.round(currentHsl.s), Math.round(currentHsl.l));
     }
 
-    setTimeout(() => {
-      if (tooltipText) return;
-      setTooltipText("");
-    }, 3000);
+    if (tooltipText) {
+      // !tooltip timeout is set after each input change
+      setTimeout(() => {
+        setTooltipText("");
+      }, 3000);
+    }
   };
 
   const getColorValue = (char) => {

@@ -30,9 +30,23 @@ const GradientOptions = (props) => {
   // !colors position doesnt change on color remove
 
   useEffect(() => {
+    // current colors position
     const index = Object.keys(colorsWidth).length - 1;
+
+    // switch color order when color position is changed
     reorderColors(colorsWidth, colorsWidth[index].x, index);
   }, [colorsWidth]);
+
+  useEffect(() => {
+    const { width } = gradientBar.current.getBoundingClientRect();
+    // set initial color position
+    setColorWidth(25, 0);
+    setColorWidth(width - 25 - 20, 1);
+
+    // set initial color width
+    setActiveWidth(1, 0);
+    setActiveWidth(95, 1);
+  }, []);
 
   const changeColorPosition = (e, index) => {
     changeActiveCol(index);
@@ -49,15 +63,25 @@ const GradientOptions = (props) => {
   };
 
   const addGradientColor = (e) => {
+    // if draggable element is clicked -> return
     if (e.target !== gradientBar.current) return;
-    const { left } = gradientBar.current.getBoundingClientRect();
 
+    const { left, width } = gradientBar.current.getBoundingClientRect();
+
+    // sets color position based on cursor position
     setColorWidth(e.clientX - left - 10, colorsAmount);
+
+    // adds new color - red by default
     setActiveCol({ index: colorsAmount, h: 0, s: 100, l: 50, a: 100 });
 
-    // TODO: replace with proper value
-    // TODO: adding color doesnt reorder colors
-    setActiveWidth(1, colorsAmount);
+    // sets color width based on cursor position
+    setActiveWidth(
+      Math.round(((e.clientX - left - 10) / width) * 100),
+      colorsAmount
+    );
+
+    // switch active color to newly generated
+    changeActiveCol(colorsAmount);
   };
 
   const generateSliders = () => {
