@@ -17,19 +17,20 @@ const TransparentOptions = ({ setA, hue, sat, light, active, gradient }) => {
     const { width } = transparencyBar.current.getBoundingClientRect();
     const position = width - (width / 100) * gradient[active].a;
 
+    // set opacity to active color opacity
     setA(gradient[active].a);
 
+    // adjust slider position to active color opacity
     setSliderPosition(position);
   }, [active]);
 
   const handleManualOpacityChange = (e) => {
     const { width } = transparencyBar.current.getBoundingClientRect();
 
+    // input validation
     if (e.target.value > 100 || e.target.value < 0) {
       e.target.value = 100;
-
       setDisplayTooltip(true);
-
       setTimeout(() => setDisplayTooltip(false), 3000);
     }
 

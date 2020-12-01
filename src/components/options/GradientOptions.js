@@ -27,7 +27,6 @@ const GradientOptions = (props) => {
 
   const gradientBar = useRef(null);
   const colorsAmount = Object.keys(gradient).length;
-  // !colors position doesnt change on color remove
 
   useEffect(() => {
     // current colors position
@@ -41,7 +40,7 @@ const GradientOptions = (props) => {
     const { width } = gradientBar.current.getBoundingClientRect();
     // set initial color position
     setColorWidth(25, 0);
-    setColorWidth(width - 25 - 20, 1);
+    setColorWidth(width - 45, 1);
 
     // set initial color width
     setActiveWidth(1, 0);
@@ -49,16 +48,21 @@ const GradientOptions = (props) => {
   }, []);
 
   const changeColorPosition = (e, index) => {
+    // switch active color
     changeActiveCol(index);
     const { width, left } = gradientBar.current.getBoundingClientRect();
 
+    // if position is out of range -> return
     if (e.clientX - left + 10 > width || e.clientX - left < -10) {
       return;
     }
 
+    // set new width
     setActiveWidth(Math.round((e.clientX - left + 10) * (100 / width)), index);
 
+    // switch color order
     reorderColors(colorsWidth, e.clientX - left - 10, index);
+
     setColorWidth(e.clientX - left - 10, index);
   };
 
@@ -87,9 +91,11 @@ const GradientOptions = (props) => {
   const generateSliders = () => {
     const sliders = [];
 
+    // generate slider for each gradient color
     for (let i = 0; i <= colorsAmount - 1; i++) {
       if (i >= Object.keys(gradient).length) return;
 
+      // set slider color
       const sliderCol = `hsl(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%)`;
 
       sliders.push(

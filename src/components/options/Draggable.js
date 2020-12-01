@@ -36,15 +36,11 @@ const Slider = styled.div.attrs(({ left, color }) => ({
   width: ${(props) => (props.wide ? "20px" : "12px")};
 
   border-radius: 5px;
-  border: 2px solid ${(props) => (props.active ? "black" : "white")};
+  border: 2px solid white;
 
-  box-shadow: 0 0 3px 0 black;
-  transition: border 300ms;
+  box-shadow: 0 0 3px 0 black,
+    ${({ active }) => (active ? "0 0 0 2px black" : "0 0 0 1px black")};
   cursor: move;
-
-  &:hover {
-    box-shadow: 0 0 6px 0 black;
-  }
 `;
 
 export default Draggable;
