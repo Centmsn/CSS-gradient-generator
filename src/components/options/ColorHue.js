@@ -19,8 +19,8 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
     setH(gradient[active].h);
     setLs(gradient[active].s, gradient[active].l);
 
-    setHueOffset((width / 360) * gradient[active].h);
-  }, [active]);
+    setHueOffset((width / 360) * gradient[active].h - 6);
+  }, [active, gradient]);
 
   useEffect(() => {
     const { h, s, l } = gradient[active];
@@ -28,6 +28,7 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
 
     setRgbColor({ r, g, b });
     // !gradient genrates problems but allows to update colors
+    // !rgb color is NOT updated live
   }, [mode, active]);
 
   const setColor = (e) => {
@@ -47,14 +48,17 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
 
   const setColorValue = (e, char) => {
     let val = parseInt(e.target.value);
+    let error = false;
 
     if (mode === "hsl") {
       if ((val > 360 || val < 0) && char === "h") {
         val = 360;
         setTooltipText("Range is 0-360");
+        error = true;
       } else if ((val > 100 || val < 0) && char !== "h") {
         val = 100;
         setTooltipText("Range is 0-100");
+        error = true;
       }
 
       switch (char) {
@@ -76,6 +80,7 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
         val = 255;
 
         setTooltipText("Range is 0-255");
+        error = true;
       }
 
       switch (char) {
@@ -100,8 +105,7 @@ const ColorHue = ({ setH, setLs, gradient, active, mode }) => {
       setLs(Math.round(currentHsl.s), Math.round(currentHsl.l));
     }
 
-    if (tooltipText) {
-      // !tooltip timeout is set after each input change
+    if (error && !tooltipText) {
       setTimeout(() => {
         setTooltipText("");
       }, 3000);

@@ -42,9 +42,6 @@ const ColorsList = ({
     const list = [];
     const sortedList = [];
 
-    // TODO: add list number
-    // ! refactor required
-
     for (let i = 0; i < length; i++) {
       const color = `hsla(${gradient[i].h}, ${gradient[i].s}%, ${gradient[i].l}%, ${gradient[i].a}%)`;
       const active = i === index ? true : false;
@@ -113,7 +110,7 @@ const ListColor = styled.div`
   transform: ${({ active }) => (active ? "translateX(10%)" : null)};
 
   flex-basis: 65%;
-  border: 2px solid black;
+  border: ${({ active }) => (active ? "3px" : "2px")} solid black;
   border-radius: 5px;
   box-shadow: inset 0 0 0 3px white;
 

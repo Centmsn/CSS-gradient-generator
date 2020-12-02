@@ -104,8 +104,8 @@ const Label = styled.label`
 const Input = styled.input`
   grid-area: 7/2/8/3;
 
-  width: 15%;
-  min-width: 50px;
+  width: 10%;
+  min-width: 30px;
 
   margin-right: 2%;
 

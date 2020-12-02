@@ -11,8 +11,6 @@ const LSOptions = ({ active, setLs, changeActiveCol, gradient, hue }) => {
   const satSelector = useRef(null);
 
   useEffect(() => {
-    // !position set incorrectly for rgb
-    // !slightly incorrect for hsl
     if (colorPickerFlag) {
       // if active color was removed
       // set active to first color
@@ -30,18 +28,27 @@ const LSOptions = ({ active, setLs, changeActiveCol, gradient, hue }) => {
     s = gradient[active].s,
     l = gradient[active].l
   ) => {
-    const satDimensions = colorSat.current.getBoundingClientRect();
+    const { width, height } = colorSat.current.getBoundingClientRect();
+
+    // !position setting test
+    let posY = height - (height / 100) * l * (1 + s / 100) - 10;
+    let posX = (width / 100) * s - 10 - (l > 50 ? (width / 50) * (l - 50) : 0);
+
+    if (posX < -10) {
+      posX = -10;
+    }
+
+    if (posY < -10) {
+      posY = -10;
+    }
 
     setSatPosition({
-      x: (satDimensions.width / 100) * s - 7.5,
-      y:
-        satDimensions.height -
-        (satDimensions.height / 100) * l * (1 + s / 100) -
-        7.5,
+      x: posX,
+      y: posY,
     });
   };
 
-  const setSatLight = (e) => {
+  const setSatLight = (e, flag = false) => {
     const {
       left,
       top,
@@ -64,6 +71,8 @@ const LSOptions = ({ active, setLs, changeActiveCol, gradient, hue }) => {
       containerTop = 0;
     }
 
+    // TODO: refactor sat and light calc
+    // !incorrect sat and light calcualtion?
     const xLight = 2 - containerLeft / width;
     const yLight = 100 - (containerTop / height) * 100;
 
@@ -83,6 +92,16 @@ const LSOptions = ({ active, setLs, changeActiveCol, gradient, hue }) => {
     }
 
     setLs((containerLeft / width) * 100, (yLight / 2) * xLight);
+
+    // prevent UseEffect hook from changing position
+    // when clicked instead of dragging
+    if (flag) {
+      setColorPickerFlag(false);
+
+      setTimeout(() => {
+        setColorPickerFlag(true);
+      });
+    }
   };
 
   const startDrag = () => {
@@ -98,7 +117,7 @@ const LSOptions = ({ active, setLs, changeActiveCol, gradient, hue }) => {
   };
 
   return (
-    <ColorPicker deg={hue} ref={colorSat} onClick={setSatLight}>
+    <ColorPicker deg={hue} ref={colorSat} onClick={(e) => setSatLight(e, true)}>
       <ColorPickerSelector
         onMouseDown={startDrag}
         ref={satSelector}

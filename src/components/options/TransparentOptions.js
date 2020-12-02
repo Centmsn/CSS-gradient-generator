@@ -120,8 +120,8 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  width: 15%;
-  min-width: 50px;
+  width: 10%;
+  min-width: 30px;
 
   margin-right: 2%;
 
